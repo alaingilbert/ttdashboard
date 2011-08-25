@@ -1,0 +1,8 @@
+var settings = {
+   DEBUG: true
+}
+
+
+for (var key in settings) {
+   exports[key] = settings[key];
+}

@@ -1,0 +1,3 @@
+--- Install socket.io ---
+cd server
+npm install socket.io
