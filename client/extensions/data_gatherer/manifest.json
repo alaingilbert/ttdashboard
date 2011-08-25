@@ -1,7 +1,8 @@
 {
-   "name": "Turntable data gatherer",
-   "version": "0.0.0",
-   "description": "This extension permit you to provide data to ttdashboard.",
+   "name":            "Turntable data gatherer",
+   "version":         "0.0.0",
+   "description":     "This extension allow you to provide data to ttdashboard.",
+   "options_page":    "options.html",
    "background_page": "background.html",
    "permissions": [
       "http://api.flickr.com/"

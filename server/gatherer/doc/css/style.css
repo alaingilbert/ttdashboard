@@ -1,0 +1,100 @@
+@font-face { font-family: DejaVu; src: url(../font/DejaVuSansMono.ttf); }
+@font-face { font-family: DejaVu; src: url(../font/DejaVuSansMono-Bold.ttf); font-weight: bold; }
+@font-face { font-family: DejaVu; src: url(../font/DejaVuSansMono-Oblique.ttf); font-style: italic; }
+@font-face { font-family: DejaVu; src: url(../font/DejaVuSansMono-BoldOblique.ttf); font-weight: bold; font-style: italic; }
+
+html, body {
+   font-family: 'Lucida Grande', Helvetica, Arial, Verdana, sans-serif;
+   font-size: 14px;
+   line-height: 21px;
+}
+
+h1 {
+   font-size: 28px;
+   margin: 40px 0 20px 0;
+}
+
+h2 {
+   font-size: 22px;
+   margin: 40px 0 20px 0;
+   color: #000;
+}
+h2 a { color: #000; }
+
+h3 {
+   font-size: 17px;
+   margin: 20px 0 0px 0;
+   color: #000;
+}
+
+h3 a { color: #000; }
+
+p {
+   margin: 5px 0 15px 20px;
+}
+
+a {
+   color: #0000ee;
+}
+
+ul li a {
+   display: block;
+   width: 130px;
+   padding: 3px 10px;
+   cursor: pointer;
+}
+ul li {
+}
+ul li a:hover {
+   color: #dd0000;
+}
+ul li:last-child {
+   border: 0px;
+}
+
+.pre {
+   white-space: pre;
+   background-color: #eee;
+}
+
+#page {
+}
+
+.menu {
+   margin: 0px 0;
+   width: 230px;
+   position: absolute;
+   left: 20px;
+}
+
+.content {
+   position: absolute;
+   left: 250px;
+   padding: 0 0 100px 0;
+}
+
+.clear { clear: both; }
+
+.signature {
+   display: block;
+   background-color: #eee;
+   padding: 2px;
+   border: 1px solid gray;
+   margin: 5px 0 5px 0;
+   font-size: 14px;
+   font-weight: normal;
+   font-family: DejaVu, 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Courier, monospace;
+}
+
+.type {
+  color: #558495;
+  font-style: italic;
+}
+.name {
+  color: navy;
+  font-weight: bold;
+}
+.param {
+}
+.return {
+}

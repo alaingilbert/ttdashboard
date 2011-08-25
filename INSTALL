@@ -1,3 +1,5 @@
 --- Install socket.io ---
-cd server
 npm install socket.io
+
+--- Install nodeunit ---
+npm install nodeunit

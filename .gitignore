@@ -1,4 +1,5 @@
 .DS_Store
 *.swp
 *.bak
-server/node_modules
+server/gatherer/node_modules
+server/gatherer/settings.js

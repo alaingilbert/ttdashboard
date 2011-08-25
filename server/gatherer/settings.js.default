@@ -1,0 +1,18 @@
+var settings = {
+   DEBUG:          true,
+   SALT:           'da9d3D#d8djd*df7fsf&dfsofj@diwq$diae32uewqoekqw9k3%da',
+
+   // Mongo settings
+   MONGO_HOST:     'localhost',
+   MONGO_PORT:     27017,
+   MONGO_DB:       'ttdashboard',
+
+   // Memcached settings
+   MEMCACHED_HOST: '127.0.0.1',
+   MEMCACHED_PORT: 11211
+}
+
+
+for (var key in settings) {
+   exports[key] = settings[key];
+}
