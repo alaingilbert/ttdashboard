@@ -3,3 +3,4 @@
 *.bak
 server/gatherer/node_modules
 server/gatherer/settings.js
+server/gatherer/doc/
