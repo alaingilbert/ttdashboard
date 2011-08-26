@@ -3,9 +3,8 @@ var settings = {
    SALT:           'da9d3D#d8djd*df7fsf&dfsofj@diwq$diae32uewqoekqw9k3%da',
 
    // Mongo settings
-   MONGO_HOST:     'localhost',
-   MONGO_PORT:     27017,
-   MONGO_DB:       'ttdashboard',
+   MYSQL_USER:     '',
+   MYSQL_PASW:     '',
 
    // Memcached settings
    MEMCACHED_HOST: '127.0.0.1',

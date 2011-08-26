@@ -188,7 +188,7 @@ var DocGen = {
 };
 
 
-var files = ['sockets.js'];
+var files = ['sockets.js', 'database_operations.js'];
 DocGen.init(files);
 DocGen.start();
   

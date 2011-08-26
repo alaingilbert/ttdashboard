@@ -8,5 +8,5 @@ document.body.appendChild(document.createElement('div')).id='data_gatherer';
 var port = chrome.extension.connect();
 document.getElementById('data_gatherer').addEventListener('myCustomEvent', function() {
    var eventData = document.getElementById('data_gatherer').innerText;
-   port.postMessage({message: "myCustomEvent", values: eventData});
+   port.postMessage( eventData );
 });
