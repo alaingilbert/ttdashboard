@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+
+{% block title %}ttDashboard - Hack around{% endblock %}
+{% block meta_keywords %}home, homepage, brag, ranking, song, songs, users, user, profile, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/hackaround.css" />
+{% endblock %}
+
+
+{% block content %}
+
+<div>
+
+<h1>Hack around</h1>
+
+<ul>
+   <li>Create a junk facebook account (<a href="http://facebook.com/" target="_blank">http://facebook.com/</a>)</li>
+   <li>Connect the <span class="red">junk account</span> on facebook, and add yourself as friend.</li>
+   <li>Reconnect your <span class="red">main account</span> on turntable.fm</li>
+   <li>Try to connect your <span class="red">junk account</span> on turntable.fm (make sure it work)</li>
+   <li>
+      Get the auth and userid cookie of your <span class="red">junk account</span>.
+      <img src="/img/cookie1.png" alt="" />
+   </li>
+   <li>Fill the form below.</li>
+</ul>
+<div style="margin-bottom: 20px; clear: both;">&nbsp;</div>
+
+<h1>Help ttdashboard to get the service back</h1>
+<form method="post" action="//">
+   <input name="auth" type="text" value="auth+live+..." style="width: 300px;" /><br />
+   <input name="userid" type="text" value="userid"  style="width: 300px;" /><br />
+   <input type="submit" value="Help ttdashboard" />
+</form>
+
+</div>
+
+{% endblock %}

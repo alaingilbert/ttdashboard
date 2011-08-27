@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/chat.css" />
+{% endblock %}
+
+
+{% block content %}
+
+<div id="chat">
+
+<div class="avatar">
+   <img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/{{chatlog.user_avatar}}/headfront.png" alt="" />
+</div>
+<div class="infos">
+   <h1><a href="/user/{{chatlog.user_id}}/">{{chatlog.user_name}}</a></h1>
+   <label>Platform:</label><span>{{chatlog.user_laptop}}</span><br />
+   <label>points:</label><span>{{chatlog.user_points}}</span><br />
+   <label>fans:</label><span>{{chatlog.user_fans}}</span><br />
+</div>
+<div class="clear" style="margin: 35px;">&nbsp;</div>
+
+
+
+<h1>History (Room: <a href="/room/{% if chatlog.room_shortcut %}{{chatlog.room_shortcut}}{% else %}{{chatlog.roomid}}{% endif %}/">{{chatlog.room_name}})</a></h1>
+<div class="chathistory">
+{% for h in history %}
+   <div{% if h.id == chatlog.id %} class="highlight"{% endif %}>
+      <span><a href="/chat/{{h.id}}/">[{{h.created|date:"SHORT_DATETIME_FORMAT"}}]</a></span>
+      <span class="name"><a href="/user/{{h.userid}}/" style="color:green; text-decoration:none;">{{h.name}}</a>:</span>
+      <span>{{h.text}}</span>
+   </div>
+{% endfor %}
+</div>
+
+<div style="margin: 10px;">&nbsp;</div>
+</div>
+
+{% endblock %}

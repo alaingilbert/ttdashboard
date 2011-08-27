@@ -1,0 +1,83 @@
+.ttfm_link {
+   font-size: 19px;
+   color: #666;
+}
+.ttfm_link:hover {
+}
+
+.dj {
+   float: left;
+   width: 200px;
+   text-align: center;
+}
+.dj .name {
+   font-weight: bold;
+   font-size: 19px;
+}
+.dj .avatar {
+   margin: auto;
+   width: 100px;
+   height: 100px;
+}
+.dj .avatar img {
+   width: 100px;
+   border: 0;
+}
+
+.separator {
+   border-bottom: 2px solid gray;
+   padding-bottom: 20px;
+   margin-bottom: 20px;
+}
+
+.current {
+   padding-bottom: 15px;
+   border-bottom: 5px solid green;
+}
+
+.dj .thumb {
+   margin: auto;
+   margin-top: 10px;
+   width: 160px;
+   font-size: 24px;
+}
+.dj .thumb img {
+   margin-right: 4px;
+}
+.dj .thumb div.up {
+   float: left;
+   min-width: 35px;
+   margin-right: 15px;
+   color: green;
+   font-weight: bold;
+}
+.dj .thumb div.down {
+   float: left;
+   color: red;
+   font-weight: bold;
+}
+
+#song_appreciation {
+   float: right;
+}
+
+
+.thumbb {
+   margin-top: 20px;
+   font-size: 60px;
+}
+.thumbb img {
+   margin-right: 4px;
+}
+.thumbb div.up {
+   float: left;
+   min-width: 35px;
+   margin-right: 15px;
+   color: green;
+   font-weight: bold;
+}
+.thumbb div.down {
+   float: left;
+   color: red;
+   font-weight: bold;
+}

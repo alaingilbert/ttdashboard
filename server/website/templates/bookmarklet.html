@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+
+{% block title %}ttDashboard - Bookmarklet{% endblock %}
+{% block meta_keywords %}bookmarklet, open source, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+{% block meta_description %}To use this turntable statistics bookmarklet just drag the button below to your Bookmarks Bar, browse to turntable.fm and click it. You will see a statistics button on the header of TurnTable.{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/bookmarklet.css" />
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/shCoreDefault.css" />
+   <script src="/js/shCore.js" type="text/javascript"></script>
+   <script src="/js/shBrushJScript.js" type="text/javascript"></script>
+   <script type="text/javascript">SyntaxHighlighter.all();</script>
+{% endblock %}
+
+
+{% block content %}
+<div id="bookmarklet">
+
+<h1>Turntable Dashboard bookmarklet (By <a href="http://twitter.com/#!/keithbeaudoin">@keithbeaudoin</a>)</h1>
+
+<p>
+   To use this turntable statistics bookmarklet just drag the button below to
+   your Bookmarks Bar, browse to <a href="http://turntable.fm">turntable.fm</a>
+   and click it. You will see a statistics button on the header of TurnTable.
+</p>
+
+<a class="button greenbtn" href='javascript:(function(){
+var container = document.getElementById("userauth");
+var obj = document.createElement("img");
+obj.onclick = function(){
+var iframe = document.createElement("iframe");
+iframe.style.backgroundColor = "#ffffff";
+iframe.src = "http://ttdashboard.com";
+iframe.width = "1200";
+iframe.height = "800";
+iframe.id = "stats_iframe";
+
+var close = document.createElement("div");
+close.id="stats_close";
+close.style.color = "#D9A343";
+close.style.cursor = "pointer";
+close.style.fontSize = "18px";
+close.innerHTML = "<center><u>close this window</u></center>";
+close.onclick = function(){
+document.getElementById("overlay").removeChild(document.getElementById("stats_iframe"));
+document.getElementById("overlay").removeChild(document.getElementById("stats_close"));
+document.getElementById("overlay").style.display = "none";
+};
+
+document.getElementById("overlay").appendChild(iframe);
+document.getElementById("overlay").appendChild(close);
+document.getElementById("overlay").style.display = "block";};
+
+if(document.getElementById("stats_btn"))
+container.removeChild(document.getElementById("stats_btn")); 
+
+obj.id = "stats_btn";
+obj.style.position = "relative";
+obj.style.left = "180px";
+obj.style.width = "97px";
+obj.style.height = "31px";
+obj.style.cursor = "pointer";
+obj.src = "http://ttdashboard.com/img/btn_stats_out.png";
+obj.onmouseout = function(){this.src="http://ttdashboard.com/img/btn_stats_out.png"};
+obj.onmouseover = function(){this.src="http://ttdashboard.com/img/btn_stats_over.png"};
+container.appendChild(obj);
+})();'>TT Stats</a>
+
+<h2>&laquo; What the hell is a bookmarklet ??? &raquo;</h2>
+<p>
+   <a href="http://en.wikipedia.org/wiki/Bookmarklet">http://en.wikipedia.org/wiki/Bookmarklet</a>
+</p>
+
+<h2>Why should I trust script injection !?</h2>
+<p>
+   Because the bookmarklet is open source and every body can tell you that the code is safe!
+</p>
+
+<pre class="brush: js;">
+javascript:(function(){
+var container = document.getElementById("userauth");
+var obj = document.createElement("img");
+obj.onclick = function(){
+var iframe = document.createElement("iframe");
+iframe.style.backgroundColor = "#ffffff";
+iframe.src = "http://ttdashboard.com";
+iframe.width = "1200";
+iframe.height = "800";
+iframe.id = "stats_iframe";
+
+var close = document.createElement("div");
+close.id="stats_close";
+close.style.color = "#D9A343";
+close.style.cursor = "pointer";
+close.style.fontSize = "18px";
+close.innerHTML = "<center><u>close this window</u></center>";
+close.onclick = function(){
+document.getElementById("overlay").removeChild(document.getElementById("stats_iframe"));
+document.getElementById("overlay").removeChild(document.getElementById("stats_close"));
+document.getElementById("overlay").style.display = "none";
+};
+
+document.getElementById("overlay").appendChild(iframe);
+document.getElementById("overlay").appendChild(close);
+document.getElementById("overlay").style.display = "block";};
+
+if(document.getElementById("stats_btn"))
+container.removeChild(document.getElementById("stats_btn")); 
+
+obj.id = "stats_btn";
+obj.style.position = "relative";
+obj.style.left = "180px";
+obj.style.width = "97px";
+obj.style.height = "31px";
+obj.style.cursor = "pointer";
+obj.src = "http://ttdashboard.com/img/btn_stats_out.png";
+obj.onmouseout = function(){this.src="http://ttdashboard.com/img/btn_stats_out.png"};
+obj.onmouseover = function(){this.src="http://ttdashboard.com/img/btn_stats_over.png"};
+container.appendChild(obj);
+})();'
+</pre>
+
+
+<h2>How to install it step by step ?</h2>
+<p>
+</p>
+<ul>
+   <li>Drag the button in top of that page in your bookmarks bar.</li>
+   <li>Rename it to : "TT Stats"</li>
+   <li>Browse to <a href="http://turntable.fm/" target="_blank">turntable.fm</a> and click it.</li>
+   <li>You will see a statistics button on the header of TurnTable.</li>
+</ul>
+
+<div class="clear" style="margin:30px;">&nbsp;</div>
+</div>
+{% endblock %}

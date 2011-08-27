@@ -1,0 +1,42 @@
+.help {
+   margin: 5px 5px 0 0;
+}
+
+.active {
+}
+
+label {
+   font-size: 12px;
+   width: 120px;
+   display: block;
+   float: left;
+   font-weight: bold;
+}
+
+.room {
+   background-color: red;
+   height: 70px !important;
+}
+
+.infos {
+   width: 279px;
+}
+
+.appreciate img {
+   margin-right: 10px;
+}
+
+.green {
+   color: green;
+   font-size: 21px;
+}
+.red {
+   color: red;
+   font-size: 21px;
+}
+.name {
+   display: block;
+   height: 20px;
+   overflow: hidden;
+   margin-bottom: 15px;
+}

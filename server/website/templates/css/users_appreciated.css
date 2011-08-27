@@ -1,0 +1,48 @@
+.user {
+   height: 70px;
+   width: 198px;
+   border-left: 1px solid gray;
+   border-right: 1px solid gray;
+   overflow: hidden;
+   float: left;
+}
+
+.cycle1 {
+   background-color: #ddd;
+}
+.cycle2 {
+   background-color: #eee;
+}
+
+.user div.avatar {
+   float: left;
+   padding-top: 3px;
+   padding-left: 3px;
+   padding-right: 3px;
+   width: 40px;
+}
+.user div.avatar img {
+   max-width: 40px;
+   max-height: 40px;
+   width: 40px;
+}
+.user div.infos {
+   float: left;
+}
+.user div.infos span.username {
+   display: block;
+   overflow: hidden;
+   height: 20px;
+   width: 152px;
+}
+.user div.infos span.username a {
+   color: black;
+}
+.user div.infos span.username a:hover {
+   text-decoration: none;
+}
+.user div.infos span.points {
+   color: gray;
+   font-size: 13px;
+}
+

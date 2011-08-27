@@ -1,0 +1,55 @@
+{% extends "vmenu.html" %}
+
+
+{% block title %}ttDashboard - Home{% endblock %}
+{% block meta_keywords %}api, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+<link rel="stylesheet" media="screen" type="text/css" href="/css/vmenu.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="/css/authkey.css" />
+<script type="text/javascript">
+$(document).ready(function() {
+});
+</script>
+{% endblock %}
+
+
+{% block content_right %}
+
+<div id="authkey">
+
+{% if error %}<div class="error">{{error}}</div>{% endif %}
+
+<h1>Auth key</h1>
+
+<p>
+   The auth key will allow ttdashboard to communicate directly with turntable.fm with your account.<br />
+   This information is encrypted in our database. So even if someone can access it, your auth key will be safe.<br />
+   <br />
+   When you got it, edit your profile and fill the "Auth key" field.<br />
+   That's it, you can now import/export playlists directly to turntable.fm<br />
+   (The auth key look like « auth+live+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX » You have to get the whole thing)<br />
+</p>
+
+<h2>How do I find my auth key ?</h2>
+<p>
+   If you use google chrome, follow theses easy step :
+</p>
+<ul>
+   <li>Go on <a href="http://turntable.fm/">turntable.fm</a></li>
+   <li>Command + Option + J (Mac) | Ctrl + Shift + J (Windows)</li>
+   <li>Open the ressources section</li>
+   <li>Click on Cookies, turntable.fm and find your auth key.</li>
+</ul>
+
+<p>
+   For other browsers, find your cookies, and search for turntableUserAuth.
+</p>
+
+<img src="/img/cookie1.png" alt="" style="border: 1px solid black;" />
+
+
+</div>
+
+{% endblock %}

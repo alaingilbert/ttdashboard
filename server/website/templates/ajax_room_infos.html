@@ -1,0 +1,49 @@
+      <div class="avatar">
+         {% if room.song_coverart %}
+         <img src="{{room.song_coverart}}" alt="" />
+         {% endif %}
+         {% if not room.song_coverart %}
+         <img src="/img/record.png" alt="" />
+         {% endif %}
+      </div>
+      <div class="infos">
+         <label>Song name:</label><span><a href="/song/{{room.song_id}}/">{{room.song_name}}</a></span><br />
+         <label>Album:</label><span>{{room.song_album}}</span><br />
+         <label>Artist:</label><span>{{room.song_artist}}</span><br />
+         <label>Length:</label><span>{{room.song_length}}</span><br />
+
+         {% if room.previewUrl %}
+         <label>Preview:</label><span><a style="cursor: pointer;" id="itunespreview0"><img src="/img/sound.png" alt="preview" title="Preview" /></a></span><br />
+         <label>Download:</label><span><a href="#" id="itunes0" class="download" target="_blank">&gt;&gt; On itunes &lt;&lt;</a></span><br />
+         <script>
+         var a = 'http://click.linksynergy.com/fs-bin/click?id=a9Fic453O4Y&subid=&offerid=162397.1&type=10&tmpid=5571&RD_PARM1='+encodeURIComponent('{{room.collectionViewUrl}}');
+         $('#itunes0').attr('href', a);
+         $('#itunespreview0').click(function(e) {
+            $('#prev').html('<audio src="{{room.previewUrl}}" controls="controls"></audio>');
+         });
+         </script>
+         {% else %}
+         <label>Preview:</label><span>No preview available</span><br />
+         {% endif %}
+
+         <br />
+         {% if room.current_dj %}
+         <label>Current DJ:</label><span><a href="/user/{{room.current_dj_id}}/">{{room.current_dj}}</a></span><br />
+         {% endif %}
+         <label>Appreciation:</label>
+            <div class="thumb">
+               <div class="up"><img src="/img/thumb_up.png" alt="" /><span class="highlight">{{room.upvotes}}</span></div>
+               <div class="down"><img src="/img/thumb_down.png" alt="" /><span class="highlight">{{room.downvotes}}</span></div>
+               <div class="clear"></div>
+            </div>
+            <br />
+         <label>Moderator:</label><span><a href="/user/{{room.mod_id}}/">{{room.mod_name}}</a></span><br />
+      </div>
+      <div class="clear"></div>
+      <script type="text/javascript">
+         (function($) {
+            $('.highlight').fadeIn('slow');
+         })(jQuery);
+      </script>
+      <input type="hidden" id="l1" value="{{room.room_listeners}}" />
+      <input type="hidden" id="l2" value="{{room.upvotes|add:room.downvotes}}" />

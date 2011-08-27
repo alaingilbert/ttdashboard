@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+
+{% block title %}ttDashboard - Rooms{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/home.css" />
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/rooms.css" />
+   <script type="text/javascript">
+
+      $(document).ready(function() {
+         if ($('#search').val() == 'Search') { 
+            $('#search').css('color', '#bbb');
+         }
+         $('#search').focus(function() {
+            if ($(this).val() == 'Search') {
+               $(this).val('');
+               $(this).css('color', 'black');
+            }
+         });
+         $('#search').blur(function() {
+            if ($(this).val() == '') {
+               $(this).val('Search');
+               $(this).css('color', '#bbb');
+            }
+         });
+      });
+   </script>
+{% endblock %}
+
+
+{% block content %}
+
+<div id="home">
+
+<h1>Stats from the past 24 hours</h1>
+
+
+<div class="column left" style="width: 248px;">
+   
+   <div class="head">
+      <!-- <span class="right help"><img src="/img/help.png" title="Help" alt="" /></span> -->
+      Most active
+   </div>
+   
+   {% for room in active %}
+   <div class="room active {% cycle "cycle1" "cycle2" %}">
+      <span class="name">
+         <a href="/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/" title="{{room.room_name}}">{{room.room_name}}</a>
+      </span>
+      <label>Average votes:</label><span class="green">{{room.moyenne|floatformat:2}}</span><br />
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+</div>
+
+<div class="column left" style="width: 248px;">
+
+   <div class="head">
+      <!-- <span class="right help"><img src="/img/help.png" title="Help" alt="" /></span> -->
+      Most Awesomes
+   </div>
+
+   {% for room in ups %}
+   <div class="room {% cycle "cycle1" "cycle2" %}">
+      <span class="name"><a href="/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/" title="{{room.room_name}}">{{room.room_name}}</a></span>
+      <label>Total Awesomes:</label>
+      <div class="appreciate">
+         <img src="/img/thumb_up.png" alt="" /><span class="green">{{room.upvotes}}</span>
+      </div>
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+</div>
+
+
+<div class="column left" style="width: 248px;">
+
+   <div class="head">
+      <!-- <span class="right help"><img src="/img/help.png" title="Help" alt="" /></span> -->
+      Most Lames
+   </div>
+
+   {% for room in downs %}
+   <div class="room {% cycle "cycle1" "cycle2" %}">
+      <span class="name"><a href="/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/" title="{{room.room_name}}">{{room.room_name}}</a></span>
+      <label>Total Lames:</label>
+      <div class="appreciate">
+         <img src="/img/thumb_down.png" alt="" /><span class="red">{{room.downvotes}}</span>
+      </div>
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+</div>
+
+
+<div class="column left" style="width: 248px;">
+
+   <div class="head">
+      <!-- <span class="right help"><img src="/img/help.png" title="Help" alt="" /></span> -->
+      Combined
+   </div>
+
+   {% for room in combined %}
+   <div class="room {% cycle "cycle1" "cycle2" %}">
+      <span class="name"><a href="/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/" title="{{room.room_name}}">{{room.room_name}}</a></span>
+      <label>Combined:</label>
+      <div class="appreciate">
+         <img src="/img/thumb_up.png" alt="" /><span class="green">{{room.votes}}</span>
+      </div>
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+</div>
+
+
+<div class="clear" style="margin: 15px;">&nbsp;</div>
+
+{% if False %}
+<h1>*Warning</h1>
+<p>For some technical reasons, only these rooms are tracked:</p>
+<ul>
+   {% for room in rooms %}
+   <li>{{room.room_name}}</li>
+   {% endfor %}
+</ul>
+{% endif %}
+
+<div style="margin: 10px;">&nbsp;</div>
+</div>
+
+
+{% endblock %}

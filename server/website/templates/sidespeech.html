@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+
+{% block title %}ttDashboard - Bookmarklet{% endblock %}
+{% block meta_keywords %}bookmarklet, open source, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+{% block meta_description %}To use this turntable statistics bookmarklet just drag the button below to your Bookmarks Bar, browse to turntable.fm and click it. You will see a statistics button on the header of TurnTable.{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/sidespeech.css" />
+{% endblock %}
+
+
+{% block content %}
+<div id="sidespeech">
+
+<h1>Sidespeech chrome extension (By <a href="http://aptgeek.com/" target="_blank">AptGeek</a>)</h1>
+
+<p>
+   SideSpeech creates a chat room between you and the other users of SideSpeech
+   visiting the same domain. You can now surf the web and talk with people
+   that share common interests in real time.
+</p>
+
+<a class="button greenbtn" href="https://sidespeech.com/install/" target="_blank" onClick="_gaq.push(['_trackEvent', 'Sidespeech', 'Download Sidespeech', 'Download Sidespeech']);">Download SideSpeech</a>
+
+<h2>Is it available for other browsers ?</h2>
+<p>
+   The extension also work on :
+</p>
+<ul class="browsers">
+   <li>Firefox</li>
+   <li>Safari</li>
+</ul>
+<p>
+   <a href="http://sidespeech.com/">http://sidespeech.com/</a>
+</p>
+
+<h2>Why could it be useful for me ?</h2>
+<p>
+   The turntable chat is limited to one room. Sidespeech removes this limit and allows
+   you to speak with everybody who are on the same domain as you.
+   Sidespeech is also totally anonymous. Nobody can know who you are. But you
+   can set a nickname if you want !
+</p>
+
+<h2>Ok! that sounds good, but what if there is too many people on the domain ?</h2>
+<p>
+   Sidespeech allows you to easily create and change rooms. So you can create a new room and invite your friends on it.
+</p>
+
+
+<div class="clear" style="margin:30px;">&nbsp;</div>
+</div>
+{% endblock %}

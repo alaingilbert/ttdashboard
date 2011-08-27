@@ -1,0 +1,25 @@
+#sidespeech h1 {
+   font-weight: bold;
+   font-size: 22px;
+   margin: 8px 0 25px 0;
+}
+#sidespeech label {
+   width: 100px;
+   display: block;
+   float: left;
+   font-weight: bold;
+}
+#sidespeech h2 {
+   font-weight: bold;
+   font-size: 18px;
+   margin: 25px 0 15px 0;
+}
+
+#sidespeech p {
+   margin: 15px;
+}
+
+.browsers {
+   display: block;
+}
+

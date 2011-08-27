@@ -1,0 +1,24 @@
+.green {
+   color: green;
+   font-size: 23px;
+}
+.red {
+   color: red;
+   font-size: 25px;
+}
+div.column div.user div.avatar {
+   float: left;
+   padding-top: 3px;
+   padding-left: 3px;
+   padding-right: 9px;
+   width: 40px;
+}
+div.column div.user div.infos span.username {
+   display: block;
+   overflow: hidden;
+   height: 20px;
+   width: 146px;
+}
+.appreciate img {
+   margin-right: 10px;
+}

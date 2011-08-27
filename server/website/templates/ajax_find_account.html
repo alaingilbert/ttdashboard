@@ -1,0 +1,9 @@
+{% for u in users %}
+<div class="ajax_user">
+   <div class="ajax_avatar"><img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/{{u.avatarid}}/headfront.png" class="avatar" /></div>
+   <a href="/profile/link/{{u.id}}/">{{u.name}}</a>
+   ({{u.points}}pts | {{u.fans}}fans)
+</div>
+{% empty %}
+No user found.
+{% endfor %}

@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+
+{% block title %}ttDashboard - {{room.room_name}}{% endblock %}
+{% block meta_keywords %}turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+{% block meta_description %}{% if room.room_description %}{{room.room_name}} - {{room.room_description}}{% else %}ttDashboard provide live stats for turntable.fm website.{% endif %}{% endblock %}
+
+
+{% block extrahead %}
+
+   <script src="/js/pornstar_min.js" type="text/javascript"></script>
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/room.css" />
+   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+         var data = new google.visualization.DataTable();
+         data.addColumn('string', 'Time');
+         data.addColumn('number', 'Listeners');
+         data.addRows({{room_stats|length}});
+         {% for stat in room_stats %}
+         data.setValue({{forloop.counter0}}, 0, '{{stat.created|date:"G\hi"}}');
+         data.setValue({{forloop.counter0}}, 1, {{stat.listeners}});
+         {% endfor %}
+
+         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, {width: 600, height: 300, title: 'Today Listeners'});
+      }
+
+
+      var g1;
+      (function($) {
+         $(document).ready(function() {
+            g1 = new Gauge('domg');
+            g1.max = {{room.room_listeners}};
+            g1.bind('gaugetxt');
+            g1.setValue({{room.upvotes|add:room.downvotes}});
+
+            var find = false;
+            $(window).scroll(function(){
+               if  ($(window).scrollTop() >= $(document).height() - $(window).height() - 300 && !find) {
+                  find = true;
+                  $.get('/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/',
+                        {'last':$('.song:last').attr('id')},
+                        function (data) {
+                           if (data != "") {
+                              $(".song:last").after(data); 
+                              setTimeout(function() { find = false; }, 1000);
+                           }
+                        });
+               }
+            });
+         });
+
+         // Update live stats.
+         function updateStats() {
+            $.get('/ajax/room/{{room.roomid}}/', function(data) {
+               var find = false;
+               $('.highlight').fadeOut(400, function() {
+                  $('#song').html(data);
+                  $('.listeners').html($('#l1').val());
+                  $('.participants').html($('#l2').val());
+                  var s = $('#l2').val();
+                  if (!find) {
+                     g1.max = parseInt($('#l1').val());
+                     g1.setValue(parseInt(s));
+                     find = true;
+                  }
+               });
+            });
+         }
+         setInterval(updateStats, 10000);
+      })(jQuery);
+   </script>
+{% endblock %}
+
+
+{% block content %}
+<div id="room">
+
+{% if PROD %}
+<div class="right">
+   <script type="text/javascript"><!--
+   google_ad_client = "pub-0624785174077060";
+   /* 234x60, created 7/17/11 */
+   google_ad_slot = "4596412434";
+   google_ad_width = 234;
+   google_ad_height = 60;
+   //-->
+   </script>
+   <script type="text/javascript"
+   src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+   </script>
+</div>
+{% endif %}
+
+
+   <h1><a href="http://turntable.fm/{{room.roomid}}" target="_blank">{{room.room_name}}</a> (<span class="listeners">{{room.room_listeners}}</span> listeners)</h1>
+
+   {% if room.room_description %}
+   <div class="description">&laquo; {{room.room_description}} &raquo;</div>
+   {% endif %}
+
+   <div id="" class="right" style="width: 180px;">
+      <h2><span id="gaugetxt" span="participants">0</span> participants / <span class="listeners">{{room.room_listeners}}</span></h2>
+      <canvas id="domg" width="150" height="80"></canvas>
+   </div>
+
+   <div id="song">
+      <div class="avatar">
+         {% if room.song_coverart %}
+         <img src="{{room.song_coverart}}" alt="" />
+         {% endif %}
+         {% if not room.song_coverart %}
+         <img src="/img/record.png" alt="" />
+         {% endif %}
+      </div>
+      <div class="infos">
+         <label>Song name:</label><span><a href="/song/{{room.song_id}}/">{{room.song_name}}</a></span><br />
+         <label>Album:</label><span>{{room.song_album}}</span><br />
+         <label>Artist:</label><span>{{room.song_artist}}</span><br />
+         <label>Length:</label><span>{{room.song_length}}</span><br />
+
+         {% if room.previewUrl %}
+         <label>Preview:</label><span><a style="cursor: pointer;" id="itunespreview0"><img src="/img/sound.png" alt="preview" title="Preview" /></a></span><br />
+         <label>Download:</label><span><a href="#" id="itunes0" class="download" target="_blank">&gt;&gt; On itunes &lt;&lt;</a></span><br />
+         <script>
+         var a = 'http://click.linksynergy.com/fs-bin/click?id=a9Fic453O4Y&subid=&offerid=162397.1&type=10&tmpid=5571&RD_PARM1='+encodeURIComponent('{{room.collectionViewUrl}}');
+         $('#itunes0').attr('href', a);
+         $('#itunespreview0').click(function(e) {
+            $('#prev').html('<audio src="{{room.previewUrl}}" controls="controls"></audio>');
+         });
+         </script>
+         {% else %}
+         <label>Preview:</label><span>No preview available</span><br />
+         {% endif %}
+
+         <br />
+         {% if room.current_dj %}
+         <label>Current DJ:</label><span><a href="/user/{{room.current_dj_id}}/">{{room.current_dj}}</a></span><br />
+         {% endif %}
+         <label>Appreciation:</label>
+            <div class="thumb">
+               <div class="up"><img src="/img/thumb_up.png" alt="" /><span class="highlight">{{room.upvotes}}</span></div>
+               <div class="down"><img src="/img/thumb_down.png" alt="" /><span class="highlight">{{room.downvotes}}</span></div>
+               <div class="clear"></div>
+            </div>
+            <br />
+         <label>Moderator:</label><span><a href="/user/{{room.mod_id}}/">{{room.mod_name}}</a></span><br />
+      </div>
+      <div class="clear"></div>
+   </div>
+   <div id="prev"></div>
+   <div class="clear"></div>
+
+   <div style="float: right;">
+      <div id="chart_div"></div>
+      <fb:comments href="http://ttdashboard.com/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/" num_posts="10" width="500" style="float: right;"></fb:comments>
+   </div>
+
+   <h1>Songs log</h1>
+
+   <div id="songs">
+   {% for log in songs_log %}
+      <div class="song" id="{{forloop.counter}}">
+         <div class="cover">
+            {% if log.coverart %}
+               <img src="{{log.coverart}}" alt="" /><br />
+            {% endif %}
+            {% if not log.coverart %}
+               <img src="/img/record.png" alt="" /><br />
+            {% endif %}
+         </div>
+         <div class="infos">
+            <label>Song name:</label><span class="song_name"><a href="/song/{{log.song_id}}/" title="{{log.song}}">{{log.song}}</a></span><br />
+            <label>Artist:</label><span>{{log.artist}}</span><br />
+            {% if log.current_dj %}
+            <label>DJ:</label><span class="dj"><a href="/user/{{log.current_dj_id}}/">{{log.current_dj}}</a></span><br />
+            {% endif %}
+            <label>Date:</label><span>{{log.starttime}}</span><br />
+            <label>Appreciation:</label>
+            <div class="thumb">
+               <div class="up"><img src="/img/thumb_up.png" alt="" /><span class="">{{log.upvotes}}</span></div>
+               <div class="down"><img src="/img/thumb_down.png" alt="" /><span>{{log.downvotes}}</span></div>
+            </div>
+         </div>
+         <div class="clear"></div>
+      </div>
+   {% endfor %}
+   </div>
+
+
+</div>
+{% endblock %}

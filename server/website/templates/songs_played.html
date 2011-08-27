@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+
+{% load humanize %}
+
+
+{% block title %}ttDashboard - Top 100 most played songs{% endblock %}
+{% block meta_keywords %}songs, most played, music, discovering, ranking, song, songs, users, user, profile, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/songs_played.css" />
+   <script type="text/javascript">
+
+      $(document).ready(function() {
+      });
+   </script>
+{% endblock %}
+
+
+{% block content %}
+
+<div>
+
+   <h1>Top 100 most played songs</h1>
+
+   <div style="border-top: 1px solid gray; border-bottom: 1px solid gray;">
+      {% for song in pop_songs %}
+      <div class="song {% cycle "cycle1" "cycle2" %}">
+         <div class="avatar">
+            {% if song.coverart %}
+            <img src="{{song.coverart}}" alt="" />
+            {% endif %}
+            {% if not song.coverart %}
+            <img src="/img/record.png" alt="" />
+            {% endif %}
+         </div>
+         <div class="infos">
+            <span>{{forloop.counter|ordinal}}</span>
+            <span class="song_name"><a href="/song/{{song.id}}/">{{song.song}}</a></span>
+            <span class="infos">played {{song.nb_play}} times</span>
+         </div>
+         <div class="clear"></div>
+      </div>
+      {% endfor %}
+      <div class="clear"></div>
+   </div>
+
+<div class="clear" style="margin: 15px;">&nbsp;</div>
+
+
+<div style="margin: 10px;">&nbsp;</div>
+</div>
+
+
+{% endblock %}
+
+

@@ -1,0 +1,39 @@
+#vmenu .left {
+   float: left;
+   width: 200px;
+}
+#vmenu .right {
+   float: left;
+   width: 750px;
+   margin-left: 50px;
+}
+
+#vmenu .title {
+   font-weight: bold;
+   margin: 10px 0 5px 0;
+   display: block;
+}
+#vmenu .left ul {
+   margin: 0;
+   padding: 0;
+}
+#vmenu .left li {
+   margin: 0;
+   padding: 0;
+   list-style: none;
+}
+#vmenu .left li a {
+   width: 180px;
+   display: block;
+   padding: 3px 10px 3px 10px;
+   text-decoration: none;
+   color: #777;
+   font-weight: bold;
+   background-color: #eee;
+   border-bottom: 1px solid white;
+   font-size: 13px;
+}
+#vmenu .left li a:hover {
+   background-color: #ddd;
+   color: #555;
+}

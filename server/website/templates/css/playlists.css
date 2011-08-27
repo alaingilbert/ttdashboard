@@ -1,0 +1,20 @@
+.playlist {
+   background-color: #eee;
+   border: 1px solid #ccc;
+   padding: 5px;
+   margin-bottom: 10px;
+}
+.playlist:hover {
+   background-color: #ddd;
+}
+.playlist a {
+   color: #555;
+}
+.nb_songs {
+   margin-left: 50px;
+   color: #555;
+}
+.comment {
+   color: #555;
+   font-style: italic;
+}

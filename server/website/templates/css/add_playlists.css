@@ -1,0 +1,27 @@
+label {
+   display: block;
+   float: left;
+   width: 170px;
+   font-weight: bold;
+}
+.playlist_name {
+   width: 200px;
+}
+.optional {
+   font-weight: normal;
+}
+
+.errorlist {
+   color: red;
+}
+.red {
+   color: red;
+}
+
+#id_name {
+   width: 200px;
+}
+#id_comment {
+   width: 400px;
+   height: 100px;
+}

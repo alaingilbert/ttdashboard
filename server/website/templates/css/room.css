@@ -1,0 +1,119 @@
+#room h2 {
+   font-weight: bold;
+}
+
+#room h1 {
+   font-weight: bold;
+   font-size: 22px;
+   margin: 8px 0 25px 0;
+}
+
+#room div.description {
+   font-style: italic;
+   padding: 0 20px 20px 20px;
+}
+
+#song {
+}
+
+#song div.avatar {
+   float: left;
+   margin-right: 15px;
+   width: 150px;
+}
+#song div.avatar img {
+   width: 150px;
+   height: 150px;
+}
+
+#song div.infos {
+   float: left;
+   min-width: 500px;
+}
+
+#room label {
+   width: 100px;
+   display: block;
+   float: left;
+   font-weight: bold;
+}
+
+#song div.thumb img {
+   margin-right: 4px;
+}
+#song div.thumb div.up {
+   float: left;
+   min-width: 35px;
+   margin-right: 15px;
+   color: green;
+   font-weight: bold;
+}
+#song div.thumb div.down {
+   float: left;
+   color: red;
+   font-weight: bold;
+}
+
+
+#songs {
+   width: 400px;
+   overflow: hidden;
+}
+#songs div.song {
+   padding-bottom: 10px;
+   margin-bottom: 10px;
+   border-bottom: 1px solid gray;
+}
+#songs div.song:last-child {
+   border-bottom: 0;
+}
+#songs div.song div.cover {
+   float: left;
+   width: 100px;
+}
+#songs div.song div.cover img {
+   width: 75px;
+   height: 75px;
+}
+#songs div.thumb {
+   display: block;
+}
+#songs div.thumb img {
+   margin-right: 4px;
+}
+#songs div.thumb div.up {
+   float: left;
+   min-width: 35px;
+   margin-right: 15px;
+   color: green;
+   font-weight: bold;
+}
+#songs div.thumb div.down {
+   float: left;
+   color: red;
+   margin-right: 15px;
+   font-weight: bold;
+}
+#songs div.infos {
+   float: left;
+   width: 300px;
+   overflow: hidden;
+}
+#songs div.infos span.song_name {
+   overflow: hidden;
+   height: 20px;
+   width: 200px;
+   overflow: hidden;
+   display: block;
+   float: left;
+}
+#songs div.infos span.dj a {
+   color: black;
+}
+#songs div.infos span.dj a:hover {
+   text-decoration: none;
+}
+#songs div.infos span.dj {
+   color: gray;
+   font-size: 13px;
+}

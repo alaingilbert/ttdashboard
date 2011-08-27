@@ -1,0 +1,26 @@
+   {% for log in songs_log %}
+      <div class="song" id="{{last|add:forloop.counter}}">
+         <div class="cover">
+            {% if log.coverart %}
+               <img src="{{log.coverart}}" alt="" /><br />
+            {% endif %}
+            {% if not log.coverart %}
+               <img src="/img/record.png" alt="" /><br />
+            {% endif %}
+         </div>
+         <div class="infos">
+            <label>Song name:</label><span class="song_name"><a href="/song/{{log.song_id}}/" title="{{log.song}}">{{log.song}}</a></span><br />
+            <label>Artist:</label><span>{{log.artist}}</span><br />
+            {% if log.current_dj %}
+            <label>DJ:</label><span class="dj"><a href="/user/{{log.current_dj_id}}/">{{log.current_dj}}</a></span><br />
+            {% endif %}
+            <label>Date:</label><span>{{log.starttime}}</span><br />
+            <label>Appreciation:</label>
+            <div class="thumb">
+               <div class="up"><img src="/img/thumb_up.png" alt="" /><span class="">{{log.upvotes}}</span></div>
+               <div class="down"><img src="/img/thumb_down.png" alt="" /><span>{{log.downvotes}}</span></div>
+            </div>
+         </div>
+         <div class="clear"></div>
+      </div>
+   {% endfor %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/itunes.css" />
+   <script type="text/javascript">
+      $(document).ready(function() {
+         $('.download').each(function(data) {
+            console.log($(this).attr('id'));
+         });
+      });
+   </script>
+{% endblock %}
+
+
+{% block content %}
+
+<h1>iTunes store</h1>
+
+{% for r in data.results %}
+<div class="result">
+   <div class="left">
+      <img src="{{r.artworkUrl100}}" alt="" />
+   </div>
+   <div class="right">
+      <label>Song name:</label><span>{{r.trackName}}</span><br />
+      <label>Artist:</label><span>{{r.artistName}}</span><br />
+      <label>Price:</label><span class="price">{{r.trackPrice}}$</span><br />
+      <label>Preview:</label><span><a href="#" id="itunespreview{{forloop.counter}}"><img src="/img/sound.png" alt="preview" title="Preview" /></a></span><br />
+      <span><a href="#" id="itunes{{forloop.counter}}" class="download" target="_blank">&gt;&gt; Download on itunes &lt;&lt;</a></span><br />
+   </div>
+
+   <script>
+   var a = 'http://click.linksynergy.com/fs-bin/click?id=a9Fic453O4Y&subid=&offerid=162397.1&type=10&tmpid=5571&RD_PARM1='+encodeURIComponent('{{r.collectionViewUrl}}');
+   $('#itunes{{forloop.counter}}').attr('href', a);
+   $('#itunespreview{{forloop.counter}}').click(function(e) {
+      $(this).parent().html('<audio src="{{r.previewUrl}}" controls="controls"></audio>');
+   });
+   </script>
+
+   <div class="clear"></div>
+</div>
+{% endfor %}
+
+
+{% endblock %}

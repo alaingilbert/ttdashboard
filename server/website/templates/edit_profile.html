@@ -1,0 +1,42 @@
+{% extends "vmenu.html" %}
+
+
+{% block title %}ttDashboard - Home{% endblock %}
+{% block meta_keywords %}api, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+<link rel="stylesheet" media="screen" type="text/css" href="/css/vmenu.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="/css/edit_profile.css" />
+{% endblock %}
+
+
+{% block content_right %}
+
+<h1>Edit profile</h1>
+
+{% if error %}<div class="error">{{error}}</div>{% endif %}
+
+<form method="post" action="">{% csrf_token %}
+   {{ form.non_field_errors }}
+   <div class="fieldWrapper">
+      <label for="id_first_name" class="optional{% if form.first_name.errors %} red{% endif %}">First name:</label>
+      {{ form.first_name }}
+   </div>
+   <div class="fieldWrapper">
+      <label for="id_last_name" class="optional{% if form.last_name.errors %} red{% endif %}">Last name:</label>
+      {{ form.last_name }}
+   </div>
+   <div class="fieldWrapper">
+      <label for="id_email" class="{% if form.email.errors %} red{% endif %}">Email:</label>
+      {{ form.email.value }}
+   </div>
+   <div class="fieldWrapper">
+      <label for="id_auth_key" class="optional{% if form.auth_key.errors %} red{% endif %}">Auth key: <a href="/authkey/" target="_blank"><img src="/img/help.png" alt="" /></a></label>
+      {{ form.auth_key }}
+   </div>
+   <input type="hidden" name="email" value="{{form.email.value}}" />
+   <input type="submit" value="Update my profile" />
+</form>
+
+{% endblock %}

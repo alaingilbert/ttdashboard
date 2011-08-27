@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load cache %}
+
+
+{% block title %}ttDashboard - Home{% endblock %}
+{% block meta_keywords %}api, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+<link rel="stylesheet" media="screen" type="text/css" href="/css/login.css" />
+{% endblock %}
+
+
+{% block content %}
+
+{% if err %}
+<div class="error">{{err}}</div>
+{% endif %}
+
+<form method="post" action="/register/">
+   <label>Username:</label><input type="text" name="username" /><br />
+   <label>Password:</label><input type="password" name="password" /><br />
+   <label>Email:</label><input type="text" name="email" /><br />
+   <input type="submit" value="Register" />
+</form>
+
+{% endblock %}

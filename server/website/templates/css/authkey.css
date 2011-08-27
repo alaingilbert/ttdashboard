@@ -1,0 +1,15 @@
+.error {
+   background-color: #ffe1e1;
+   border: 1px solid #6f2f2f;
+   color: #6f2f2f;
+   padding: 6px;
+   margin: 10px 0;
+}
+h2 {
+   margin: 25px 0 15px 0;
+   font-weight: bold;
+   font-size: 20px;
+}
+p {
+   margin: 15px;
+}

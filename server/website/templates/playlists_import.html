@@ -1,0 +1,61 @@
+{% extends "vmenu.html" %}
+
+
+{% block title %}ttDashboard - Home{% endblock %}
+{% block meta_keywords %}api, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+<link rel="stylesheet" media="screen" type="text/css" href="/css/vmenu.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="/css/playlist.css" />
+<script type="text/javascript">
+$(document).ready(function() {
+   $('#save').click(function(e) {
+      $('#importfrm').submit();
+   });
+});
+</script>
+{% endblock %}
+
+
+{% block content_right %}
+
+<form id="importfrm" method="post" action="/profile/playlists/import/save/">
+
+<div style="float: right;">
+   <span style="margin-top: 10px; display: block;" class="button greenbtn" id="save">Save this playlist</span>
+</div>
+
+<h1>Playlist: {{playlist.name}}</h1>
+
+<p class="comment">« Imported from turntable »</p>
+
+{% for song in songs %}
+   <input type="hidden" name="song_{{forloop.counter}}" value="{{song.id}}" />
+   <div class="song">
+         <div style="float: right;">
+            <!-- <a href="/profile/playlists/{{playlist.id}}/delete-song/{{song.id}}/" onclick="javascript: if (!confirm('Do you really want to delete this song from that playlist ?')) return false;"><img src="/img/cross.png" alt="" title="Remove" /></a> -->
+         </div>
+      <div>
+         <div class="coverart">
+            {% if song.metadata.coverart %}
+            <img src="{{song.metadata.coverart}}" alt="" /><br />
+            {% else %}
+            <img src="/img/record.png" alt="" /><br />
+            {% endif %}
+         </div>
+         <div class="infos">
+            <label>Song name:</label><span><a href="/song/{{song.id}}/">{{song.metadata.song}}</a></span><br />
+            <label>Album:</label><span>{{song.metadata.album}}</span><br />
+            <label>Artist:</label><span>{{song.metadata.artist}}</span><br />
+         </div>
+         <div class="clear"></div>
+      </div>
+   </div>
+{% empty %}
+There is no songs on that playlist :(
+{% endfor %}
+
+</form>
+
+{% endblock %}

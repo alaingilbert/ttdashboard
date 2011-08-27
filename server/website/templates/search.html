@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+
+{% block title %}ttDashboard - Search results{% endblock %}
+{% block meta_keywords %}search, results, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/search.css" />
+   <script type="text/javascript">
+      $(document).ready(function() {
+         var find = false;
+         $(window).scroll(function(){
+            if  ($(window).scrollTop() >= $(document).height() - $(window).height() - 300 && !find){
+               find = true;
+               $.get('/search/',
+                     {'last':$('.result:last').attr('id'), 'search':'{{search}}', 'what':'{{what}}'},
+                     function (data) {
+                        if (data != "") {
+                           $(".result:last").after(data); 
+                           setTimeout(function() { find = false; }, 1000);
+                        }
+                     });
+            }
+         }); 
+
+      });
+   </script>
+{% endblock %}
+
+
+{% block content %}
+<div id="search">
+
+<h1>Results</h1>
+
+{% if not results %}
+
+<span>Nothing found.</span>
+
+{% else %}
+
+<div class="results">
+{% for result in results %}
+   <div class="result" id="{{forloop.counter}}">
+      {% if what == 'user' %}
+
+      <div class="avatar">
+         <a href="/user/{{result.id}}/"><img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/{{result.avatarid}}/headfront.png" alt="" /></a>
+      </div>
+      <div class="infos">
+         <h3><a href="/user/{{result.id}}/">{{result.name_highlight|safe}}</a></h3>
+         <label>Platform:</label><span>{{result.laptop}}</span><br />
+         <label>points:</label><span>{{result.points}}</span><br />
+         <label>fans:</label><span>{{result.fans}}</span><br />
+      </div>
+      
+      {% else %}
+         {% if what == 'song' %}
+
+      <div class="coverart">
+         {% if result.coverart %}
+            <a href="/song/{{result.id}}/"><img src="{{result.coverart}}" alt="" /></a><br />
+         {% else %}
+            <a href="/song/{{result.id}}/"><img src="/img/record.png" alt="" /></a><br />
+         {% endif %}
+      </div>
+      <div class="infos">
+         <label>Song name:</label><span><a href="/song/{{result.id}}/">{{result.song_highlight|safe}}</a></span><br />
+         <label>Album:</label><span>{{result.album_highlight|safe}}</span><br />
+         <label>Artist:</label><span>{{result.artist_highlight|safe}}</span><br />
+         {% if result.genre %}
+         <label>Genre:</label><span>{{result.genre_highlight|safe}}</span><br />
+         {% endif %}
+         <a href="/itunes/artist/{{result.artist}}/song/{{result.song}}/" class="download">&gt;&gt; Download on itunes &lt;&lt;</a>
+      </div>
+
+         {% else %}
+            {% if what == 'chat' %}
+
+      <div class="infos">
+         <label>Room:</label><span><a href="/room/{% if result.room_shortcut %}{{result.room_shortcut}}{% else %}{{result.roomid}}{% endif %}/">{{result.room_name}}</a></span><br />
+         <label>Date:</label><span>{{result.created}}</span><br />
+      </div>
+      <div class="clear"></div>
+      <div class="chat">
+         <span class="seemore"><a href="/chat/{{result.id}}/">&gt;&gt; See the full discussion &lt;&lt;</a></span> <br />
+         <span class="username"><a href="/user/{{result.userid}}/">{{result.name}}:</a></span>
+         <span class="text">{{result.text_highlight|safe}}</span>
+      </div>
+            {% else %}
+               {% if what == 'room' %}
+                  
+      <div class="room">
+         <div class="room_name"><a href="/room/{% if result.room_shortcut %}{{result.room_shortcut}}{% else %}{{result.roomid}}{% endif %}/">{{result.name_highlight|safe}}</a></div>
+         <div class="room_description">
+         {% if result.description %}
+            {{result.description_highlight|safe}}
+         {% else %}
+            This room does not have description.
+         {% endif %}
+         </div>
+         <div class="infos">
+            <label>Listeners:</label><span>{{result.listeners}}</span><br />
+            <label>Last update:</label><span>{{result.modified}}</span><br />
+         </div>
+      </div>
+
+               {% endif %}
+            {% endif %}
+         {% endif %}
+      {% endif %}
+      <div class="clear"></div>
+   </div>
+{% endfor %}
+</div>
+
+{% endif %}
+
+<div style="margin: 10px;">&nbsp;</div>
+</div>
+{% endblock %}

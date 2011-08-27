@@ -1,0 +1,31 @@
+.coverart {
+   float: left;
+   width: 80px;
+}
+.coverart img {
+   width: 65px;
+}
+
+.infos {
+   float: left;
+}
+.infos label {
+   float: left;
+   font-weight: bold;
+   display: block;
+   width: 100px;
+}
+
+.comment {
+   font-style: italic;
+   margin: 20px 20px;
+}
+
+.song {
+   border-bottom: 1px solid gray;
+   margin-bottom: 10px;
+   padding-bottom: 10px;
+}
+.song:last-child {
+   border-bottom: 0px solid gray;
+}

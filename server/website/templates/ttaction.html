@@ -1,0 +1,26 @@
+{% extends "vmenu.html" %}
+
+
+{% block title %}ttDashboard - Home{% endblock %}
+{% block meta_keywords %}api, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+<link rel="stylesheet" media="screen" type="text/css" href="/css/vmenu.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="/css/ttaction.css" />
+{% endblock %}
+
+
+{% block content_right %}
+
+<div id="profile">
+
+<h1>Warning</h1>
+<p>This action will disconnect you from your current turntable room.</p>
+
+<a href="?confirm"><span class="button greenbtn">Continue</span></a>
+<a href="/profile/"><span class="button redbtn">Cancel</span></a>
+
+</div>
+
+{% endblock %}

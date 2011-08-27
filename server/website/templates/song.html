@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+
+{% block title %}ttDashboard - {{song.song}}{% endblock %}
+{% block meta_keywords %}{{song.song}}, {{song.album}}, {{song.artist}}, song, songs, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/song.css" />
+{% endblock %}
+
+
+{% block content %}
+<div id="song">
+   <div class="avatar">
+      {% if song.coverart %}
+         <img src="{{song.coverart}}" alt="" /><br />
+      {% else %}
+         <img src="/img/record.png" alt="" /><br />
+      {% endif %}
+      <a href="#"><img src="/img/star.png" title="Add to my favorites songs" style="width: 16px; height: 16px;" alt="" /></a>
+      <a href="/profile/playlists/add-song/{{song.id}}/"><img src="/img/add.png" title="Add this song in playlists" style="width: 16px; height: 16px;" alt="" /></a>
+   </div>
+   <div class="infos">
+      <h1>{{song.song}}</h1>
+      <label>Song name:</label><span>{{song.song}}</span><br />
+      <label>Album:</label><span>{{song.album}}</span><br />
+      <label>Artist:</label><span>{{song.artist}}</span><br />
+      <label>Length:</label><span>{{song.length}}</span><br />
+      {% if song.genre %}
+      <label>Genre:</label><span>{{song.genre}}</span><br />
+      {% endif %}
+      <label>Played:</label><span>{{song.nb_play}} times</span><br />
+      <label>Appreciation:</label>
+      <div class="thumb">
+         <div class="up"><img src="/img/thumb_up.png" alt="" /><span class="">{{song.upvotes}}</span></div>
+         <div class="down"><img src="/img/thumb_down.png" alt="" /><span>{{song.downvotes}}</span></div>
+         <div class="clear"></div>
+      </div>
+
+      {% if song.previewUrl %}
+      <label>Preview:</label><span><a href="#" id="itunespreview0"><img src="/img/sound.png" alt="preview" title="Preview" /></a></span><br />
+      <label>Download:</label><span><a href="#" id="itunes0" class="download" target="_blank">&gt;&gt; On itunes &lt;&lt;</a></span><br />
+
+      <script>
+      var a = 'http://click.linksynergy.com/fs-bin/click?id=a9Fic453O4Y&subid=&offerid=162397.1&type=10&tmpid=5571&RD_PARM1='+encodeURIComponent('{{song.collectionViewUrl}}');
+      $('#itunes0').attr('href', a);
+      $('#itunespreview0').click(function(e) {
+         $(this).parent().html('<audio src="{{song.previewUrl}}" controls="controls"></audio>');
+      });
+      </script>
+      {% else %}
+      <label>Preview:</label><span>No preview available</span><br />
+      {% endif %}
+
+   </div>
+   <div class="clear"></div>
+   
+   <div class="clear" style="margin: 10px;">&nbsp;</div>
+
+   <h1>Appreciation log</h1>
+
+   <div id="appreciations">
+   {% for log in appreciation_log %}
+      <div class="appreciation">
+         <label>Date:</label><span>{{log.starttime}}</span><br />
+         <label>Room:</label><span><a href="/room/{% if log.room_shortcut %}{{log.room_shortcut}}{% else %}{{log.roomid}}{% endif %}/">{{log.room_name}}</a></span><br />
+         {% if log.current_dj %}
+         <label>DJ:</label><span><a href="/user/{{log.current_dj_id}}/">{{log.current_dj}}</a></span><br />
+         {% endif %}
+         <label>Appreciation:</label>
+         <div class="thumb">
+            <div class="up"><img src="/img/thumb_up.png" alt="" /><span class="">{{log.upvotes}}</span></div>
+            <div class="down"><img src="/img/thumb_down.png" alt="" /><span>{{log.downvotes}}</span></div>
+            <div class="clear"></div>
+         </div>
+      </div>
+   {% empty %}
+      <div>This song has no log.</div>
+   {% endfor %}
+   </div>
+</div>
+{% endblock %}

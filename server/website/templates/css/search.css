@@ -1,0 +1,94 @@
+.room_name {
+   font-weight: bold;
+}
+.room_description {
+   font-style: italic;
+}
+.room {
+}
+
+.result .download {
+   font-weight: bold;
+   color: blue;
+}
+
+.result label {
+   width: 100px;
+   display: block;
+   float: left;
+   font-weight: bold;
+}
+
+.result .avatar {
+   float: left;
+   margin-right: 35px;
+   width: 100px;
+}
+
+.result .coverart {
+   float: left;
+   margin-right: 15px;
+}
+
+.result h3 {
+   font-weight: bold;
+   margin: 10px 0;
+   font-size: 18px;
+}
+
+.result a {
+   color: #666;
+   text-decoration: underline;
+}
+.result a:hover {
+   text-decoration: none;
+}
+
+.avatar img {
+   margin-top: 15px;
+   max-width: 100px;
+   max-height: 100px;
+}
+.coverart img {
+   max-width: 100px;
+   max-height: 100px;
+   width: 75px;
+   height: 75px;
+}
+.infos {
+   min-width: 500px;
+   float: left;
+}
+
+.result {
+   border-bottom: 1px solid gray;
+   padding-bottom: 15px;
+   margin-bottom: 15px;
+}
+.result:last-child {
+   border: 0;
+}
+
+.chat {
+   margin-top: 10px;
+   clear: both;
+}
+.chat .seemore a {
+   color: blue;
+   font-weight: bold;
+}
+.chat .username {
+   font-weight: bold;
+   margin-right: 10px;
+   color: green;
+}
+.chat .username a {
+   color: green;
+   text-decoration: none;
+}
+.chat .text {
+   
+}
+.highlight {
+   background-color: yellow;
+}

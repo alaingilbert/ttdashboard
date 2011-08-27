@@ -1,0 +1,29 @@
+      {% for room in rooms %}
+      <div class="room {% cycle "cycle1" "cycle2" %}">
+         <span class="name"><a href="/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/">{{room.room_name}}</a></span>
+         <span class="listeners">({{room.room_listeners}} listeners)</span>
+         <div class="more"><a href="/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/">More infos...</a></div>
+         <div class="song">
+            <div class="currently_playing">Currently playing {% if room.current_dj %}<span class="dj">(DJ: <a href="/user/{{room.current_dj_id}}/">{{room.current_dj}}</a>)</span>{% endif %}</div>
+            <div class="avatar">
+               {% if room.song_coverart %}
+               <img src="{{room.song_coverart}}" alt="" />
+               {% endif %}
+               {% if not room.song_coverart %}
+               <img src="/img/record.png" alt="" />
+               {% endif %}
+            </div>
+            <div class="infos">
+               <span class="song_name">{{room.song_name|slice:":50"}}</span>
+               <div class="thumb">
+                  <div class="up"><img src="/img/thumb_up.png" alt="" /><span class="highlight">{{room.upvotes}}</span></div>
+                  <div class="down"><img src="/img/thumb_down.png" alt="" /><span class="highlight">{{room.downvotes}}</span></div>
+               </div>
+            </div>
+         </div>
+         <div class="clear"></div>
+      </div>
+      {% endfor %}
+      <script type="text/javascript">
+         $('.highlight').fadeIn('slow');
+      </script>

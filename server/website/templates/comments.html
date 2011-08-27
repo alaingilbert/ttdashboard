@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+
+{% block title %}ttDashboard - Comments / Suggestions{% endblock %}
+{% block meta_keywords %}contact, suggestions, message, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/comments.css" />
+{% endblock %}
+
+
+{% block content %}
+<div id="comments">
+
+<h1>Comments / Suggestions</h1>
+
+<form action="/comments-and-suggestions/" method="post">{% csrf_token %}
+   {{ form.non_field_errors }}
+   <div class="fieldWrapper">
+      <label for="id_sender">Your email address:</label>
+      {{ form.sender.errors }}
+      {{ form.sender }}
+   </div>
+   <div class="fieldWrapper">
+      <label for="id_message">Your message:</label>
+      {{ form.message.errors }}
+      {{ form.message }}
+   </div>
+   <p><input type="submit" value="Send message" /></p>
+</form>
+
+</div>
+{% endblock %}

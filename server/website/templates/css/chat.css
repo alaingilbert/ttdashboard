@@ -1,0 +1,33 @@
+.chathistory .name {
+   font-weight: bold;
+   color: green;
+}
+
+.highlight {
+   background-color: yellow;
+}
+
+#chat a {
+   color: #666;
+}
+#chat a:hover {
+   text-decoration: none;
+}
+
+.infos label {
+   width: 100px;
+   display: block;
+   float: left;
+   font-weight: bold;
+}
+.avatar {
+   float: left;
+   margin-right: 35px;
+}
+.avatar img {
+   width: 100px;
+}
+.infos {
+   min-width: 500px;
+   float: left;
+}

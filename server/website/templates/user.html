@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+
+{% load humanize %}
+
+
+{% block title %}ttDashboard - {{tuser.name}}{% endblock %}
+{% block meta_keywords %}user, profile, songs played, songs liked, songs disliked, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/user.css" />
+{% endblock %}
+
+
+{% block content %}
+<div id="user">
+   <div class="avatar">
+      <img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/{{tuser.avatarid}}/headfront.png" alt="" />
+   </div>
+   <div class="infos">
+      <h1>{{tuser.name}}</h1>
+      <label>Platform:</label><span>{{tuser.laptop}}</span><br />
+      <label style="color: #f0f;">Hugs points:</label><span class="left" style="width: 70px; color: #f0f; font-weight: bold;">{{hugspoints}}</span><br />
+      <label>points:</label><span class="left" style="width: 70px;">{{tuser.points}}</span><span class="rank">( <img src="/img/star.png" alt="" /> {{rank_points|ordinal|intcomma}} )</span><br />
+      <label>fans:</label><span class="left" style="width: 70px;">{{tuser.fans}}</span><span class="rank">( <img src="/img/star.png" alt="" /> {{rank_fans|ordinal|intcomma}} )</span><br />
+      <label>Appreciation:</label>
+      <div class="thumb">
+         <div class="up"><img src="/img/thumb_up.png" alt="" /><span class="">{% if tuser.upvotes %}{{tuser.upvotes}}{% else %}0{% endif %}</span></div>
+         <div class="down"><img src="/img/thumb_down.png" alt="" /><span>{% if tuser.downvotes %}{{tuser.downvotes}}{% else %}0{% endif %}</span></div>
+         <div class="clear"></div>
+      </div>
+   </div>
+   <div class="clear" style="margin: 35px;">&nbsp;</div>
+
+
+   <div class="column">
+      <h1>Songs played by this user</h1>
+      <div class="songs">
+      {% for log in songs_log %}
+         <div class="song">
+            <div class="cover">
+               {% if log.song_coverart %}
+                  <img src="{{log.song_coverart}}" alt="" /><br />
+               {% else %}
+                  <img src="/img/record.png" alt="" /><br />
+               {% endif %}
+            </div>
+            <div class="infos caliss">
+               <label>Room:</label><span><a href="/room/{% if log.room_shortcut %}{{log.room_shortcut}}{% else %}{{log.roomid}}{% endif %}/">{{log.room_name}}</a></span><br />
+               <label>Song name:</label><span><a href="/song/{{log.song_id}}/">{{log.song_name}}</a></span><br />
+               <label>Album:</label><span>{{log.song_album}}</span><br />
+               <label>Artist:</label><span>{{log.song_artist}}</span><br />
+               <label>Date:</label><span>{{log.starttime}}</span><br />
+               <label>Appreciation:</label>
+               <div class="thumb">
+                  <div class="up auto"><img src="/img/thumb_up.png" alt="" /><span class="auto">{{log.upvotes}}</span></div>
+                  <div class="down auto"><img src="/img/thumb_down.png" alt="" /><span class="auto">{{log.downvotes}}</span></div>
+                  <div class="clear"></div>
+               </div>
+               {% if log.current_dj %}
+               <span class="dj">(DJ: {{log.current_dj}})</span>
+               {% endif %}
+            </div>
+            <div class="clear"></div>
+         </div>
+      {% empty %}
+         <div>This user has not played any song yet.</div>
+      {% endfor %}
+      </div>
+   </div>
+
+   <div class="column">
+      <h1>Songs liked by this user</h1>
+      <div class="songs">
+      {% for log in songs_like %}
+         <div class="song">
+            <div class="cover">
+               {% if log.song_coverart %}
+                  <img src="{{log.song_coverart}}" alt="" /><br />
+               {% else %}
+                  <img src="/img/record.png" alt="" /><br />
+               {% endif %}
+            </div>
+            <div class="infos caliss">
+               <label>Song name:</label><span><a href="/song/{{log.song_id}}/">{{log.song_name}}</a></span><br />
+               <label>Album:</label><span>{{log.song_album}}</span><br />
+               <label>Artist:</label><span>{{log.song_artist}}</span><br />
+               {% if log.song_genre %}
+               <label>Genre:</label><span>{{log.song_genre}}</span><br />
+               {% endif %}
+               {% if log.current_dj %}
+               <span class="dj">(DJ: {{log.current_dj}})</span>
+               {% endif %}
+            </div>
+            <div class="clear"></div>
+            <div class="appreciate">
+               <img src="/img/thumb_up.png" alt="" /><span class="green">{{log.nb}}</span>
+            </div>
+            <div class="clear"></div>
+         </div>
+      {% empty %}
+         <div>This user has not liked any song yet.</div>
+      {% endfor %}
+      </div>
+   </div>
+
+   <div class="column">
+      <h1>Songs disliked by this user</h1>
+      <div class="songs">
+      {% for log in songs_dislike %}
+         <div class="song">
+            <div class="cover">
+               {% if log.song_coverart %}
+                  <img src="{{log.song_coverart}}" alt="" /><br />
+               {% else %}
+                  <img src="/img/record.png" alt="" /><br />
+               {% endif %}
+            </div>
+            <div class="infos caliss">
+               <label>Song name:</label><span><a href="/song/{{log.song_id}}/">{{log.song_name}}</a></span><br />
+               <label>Album:</label><span>{{log.song_album}}</span><br />
+               <label>Artist:</label><span>{{log.song_artist}}</span><br />
+               {% if log.song_genre %}
+               <label>Genre:</label><span>{{log.song_genre}}</span><br />
+               {% endif %}
+               {% if log.current_dj %}
+               <span class="dj">(DJ: {{log.current_dj}})</span>
+               {% endif %}
+            </div>
+            <div class="clear"></div>
+            <div class="appreciate">
+               <img src="/img/thumb_down.png" alt="" /><span class="red">{{log.nb}}</span>
+            </div>
+            <div class="clear"></div>
+         </div>
+      {% empty %}
+         <div>This user has not liked any song yet.</div>
+      {% endfor %}
+      </div>
+   </div>
+
+
+<div class="clear"></div>
+</div>
+{% endblock %}

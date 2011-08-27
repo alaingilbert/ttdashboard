@@ -1,0 +1,39 @@
+.error {
+   background-color: #ffe1e1;
+   border: 1px solid #6f2f2f;
+   color: #6f2f2f;
+   padding: 6px;
+   margin: 10px 0;
+}
+label {
+   display: block;
+   float: left;
+   width: 170px;
+   font-weight: bold;
+}
+.playlist_name {
+   width: 200px;
+}
+.optional {
+   font-weight: normal;
+}
+
+.errorlist {
+   color: red;
+}
+.red {
+   color: red;
+}
+
+#id_first_name {
+   width: 250px;
+}
+#id_last_name {
+   width: 250px;
+}
+#id_email {
+   width: 250px;
+}
+#id_auth_key {
+   width: 350px;
+}

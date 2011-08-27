@@ -1,0 +1,17 @@
+#comments h1 {
+   font-weight: bold;
+   font-size: 22px;
+   margin: 8px 0 25px 0;
+}
+
+#comments label {
+   display: block;
+   font-weight: bold;
+}
+
+#comments form {
+}
+
+#comments .errorlist {
+   color: red;
+}

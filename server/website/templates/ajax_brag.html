@@ -1,0 +1,1 @@
+{% load humanize %}{% if find %}#turntable {{tuser.name}} {{tuser.points}}pts ({{tuser.rank_points|ordinal|intcomma}}), {{tuser.fans}}fans ({{tuser.rank_fans|ordinal|intcomma}}) via http://ttdashboard.com/user/{{tuser.id}}/{% else %}Username not found. {% endif %}

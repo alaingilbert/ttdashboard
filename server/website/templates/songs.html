@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+
+{% block title %}ttDashboard - Songs{% endblock %}
+{% block meta_keywords %}songs, song, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/home.css" />
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/songs.css" />
+   <script type="text/javascript">
+
+      $(document).ready(function() {
+         if ($('#search').val() == 'Search') { 
+            $('#search').css('color', '#bbb');
+         }
+         $('#search').focus(function() {
+            if ($(this).val() == 'Search') {
+               $(this).val('');
+               $(this).css('color', 'black');
+            }
+         });
+         $('#search').blur(function() {
+            if ($(this).val() == '') {
+               $(this).val('Search');
+               $(this).css('color', '#bbb');
+            }
+         });
+      });
+   </script>
+{% endblock %}
+
+
+{% block content %}
+
+<div id="home">
+
+<h1>Stats from the past 24 hours</h1>
+
+<div class="column left">
+   <div class="head">Most Awesomes</div>
+   {% for song in ups %}
+   <div class="song {% cycle "cycle1" "cycle2" %}">
+      <div class="avatar">
+         {% if song.coverart %}
+         <img src="{{song.coverart}}" alt="" />
+         {% endif %}
+         {% if not song.coverart %}
+         <img src="/img/record.png" alt="" />
+         {% endif %}
+      </div>
+      <div class="infos">
+         <span class="song_name"><a href="/song/{{song.id}}/">{{song.song}}</a></span>
+         <span class="infos">
+           <div class="appreciate">
+              <img src="/img/thumb_up.png" alt="" /><span class="green">{{song.upvotes}}</span>
+           </div>
+         </span>
+      </div>
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+   <!-- <div class="footer"><a href="#">See more...</a></div> -->
+</div>
+
+<div class="column left">
+   <div class="head">Most Lames</div>
+   {% for song in downs %}
+   <div class="song {% cycle "cycle1" "cycle2" %}">
+      <div class="avatar">
+         {% if song.coverart %}
+         <img src="{{song.coverart}}" alt="" />
+         {% endif %}
+         {% if not song.coverart %}
+         <img src="/img/record.png" alt="" />
+         {% endif %}
+      </div>
+      <div class="infos">
+         <span class="song_name"><a href="/song/{{song.id}}/">{{song.song}}</a></span>
+         <span class="infos">
+           <div class="appreciate">
+              <img src="/img/thumb_down.png" alt="" /><span class="red">{{song.downvotes}}</span>
+           </div>
+         </span>
+      </div>
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+   <!-- <div class="footer"><a href="#">See more...</a></div> -->
+</div>
+
+<div class="column left">
+   <div class="head">Combined</div>
+   {% for song in combined %}
+   <div class="song {% cycle "cycle1" "cycle2" %}">
+      <div class="avatar">
+         {% if song.coverart %}
+         <img src="{{song.coverart}}" alt="" />
+         {% endif %}
+         {% if not song.coverart %}
+         <img src="/img/record.png" alt="" />
+         {% endif %}
+      </div>
+      <div class="infos">
+         <span class="song_name"><a href="/song/{{song.id}}/">{{song.song}}</a></span>
+         <span class="infos">
+           <div class="appreciate">
+              <img src="/img/thumb_up.png" alt="" /><span class="green">{{song.votes}}</span>
+           </div>
+         </span>
+      </div>
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+   <!-- <div class="footer"><a href="#">See more...</a></div> -->
+</div>
+
+<div class="column left">
+   <div class="head">Most played songs</div>
+   {% for song in pop_songs %}
+   <div class="song {% cycle "cycle1" "cycle2" %}">
+      <div class="avatar">
+         {% if song.coverart %}
+         <img src="{{song.coverart}}" alt="" />
+         {% endif %}
+         {% if not song.coverart %}
+         <img src="/img/record.png" alt="" />
+         {% endif %}
+      </div>
+      <div class="infos">
+         <span class="song_name"><a href="/song/{{song.id}}/">{{song.song}}</a></span>
+         <span class="infos">played {{song.nb_play}} times</span>
+      </div>
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+   <!-- <div class="footer"><a href="#">See more...</a></div> -->
+</div>
+
+
+<div class="clear" style="margin: 15px;">&nbsp;</div>
+
+{% if False %}
+<h1>*Warning</h1>
+<p>For some technical reasons, only these rooms are tracked:</p>
+<ul>
+   {% for room in rooms %}
+   <li>{{room.room_name}}</li>
+   {% endfor %}
+</ul>
+{% endif %}
+
+<div style="margin: 10px;">&nbsp;</div>
+</div>
+
+
+{% endblock %}

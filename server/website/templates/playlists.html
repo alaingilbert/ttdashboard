@@ -1,0 +1,46 @@
+{% extends "vmenu.html" %}
+
+
+{% block title %}ttDashboard - Home{% endblock %}
+{% block meta_keywords %}api, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+<link rel="stylesheet" media="screen" type="text/css" href="/css/vmenu.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="/css/playlists.css" />
+{% endblock %}
+
+
+{% block content_right %}
+
+<div style="float: right;">
+   <span style="margin-top: 10px; display: block;"><a href="/profile/playlists/import/" onClick="_gaq.push(['_trackEvent', 'Playlists', 'Playlists', 'Import from ttfm']);" class="button greenbtn" id="brag">Import from turntable</a></span>
+</div>
+
+<h1>My playlists</h1>
+{% for playlist in playlists %}
+   <div class="playlist">
+         <div style="float: right;">
+            <a href="/profile/playlists/edit/{{playlist.id}}/"><img src="/img/pencil.png" alt="" title="Edit" /></a>
+            <a href="/profile/playlists/delete/{{playlist.id}}/" onclick="javascript: if (!confirm('Do you really want to delete this playlist ?')) return false;"><img src="/img/cross.png" alt="" title="Remove" /></a>
+         </div>
+      <div>
+         <span>
+            Name: <a href="/profile/playlists/{{playlist.id}}/">{{playlist.name}}</a>
+         </span>
+         <span class="nb_songs">
+            ({{playlist.nb_songs}} song{{playlist.nb_songs|pluralize}})
+         </span>
+      </div>
+      <div>
+         <span>Comment:</span>
+         <span class="comment">
+            {% if playlist.comment %}« {{playlist.comment|truncatewords:10}} »{% endif %}
+         </span>
+      </div>
+   </div>
+{% empty %}
+<p>You don't have any playlist yet... (<a href="/profile/playlists/create/">Create one</a>)</p>
+{% endfor %}
+
+{% endblock %}

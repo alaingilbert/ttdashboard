@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+
+{% block title %}ttDashboard - Home{% endblock %}
+{% block meta_keywords %}home, homepage, brag, ranking, song, songs, users, user, profile, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/home.css" />
+   <script type="text/javascript">
+
+      $(document).ready(function() {
+         // Display popup.
+         $('#brag').click(function(e) {
+            $('#popup').css('display', 'block');
+            $('#txtusername').css('color', '#bbb');
+            $('#txtusername').val('turntable username');
+            {% if user.get_profile.ttuid %}
+            $('#popup').css('display', 'block');
+            $('#popup .content .step1').html('<span class="username">{{user}}</span>');
+            $.get('/ajax_brag/uid/{{user.get_profile.ttuid}}/', function(data) {
+               if (data['error']) {
+               } else {
+                  $('#tbox').html('');
+                  twttr.anywhere(function (T) {
+                     T("#tbox").tweetBox({
+                        height: 100,
+                        width: 400,
+                        label: '',
+                        defaultContent: data
+                     });
+                  });
+               }
+            });
+            {% else %}
+            $('#tbox').html('<span class="test">You have to find your user account first !</span>');
+            {% endif %}
+         });
+
+         // Close popup.
+         $('#popup .content').click(function(e) { return false; });
+         $('#popup .close').click(function(e) { $('#popup').css('display', 'none'); });
+         $('#popup').click(function(e) {
+            $(this).css('display', 'none');
+         });
+
+         if ($('#txtusername').val() == 'turntable username') { 
+            $('#txtusername').css('color', '#bbb');
+         }
+         $('#txtusername').focus(function() {
+            if ($(this).val() == 'turntable username') {
+               $(this).val('');
+               $(this).css('color', 'black');
+            }
+         });
+         $('#txtusername').blur(function() {
+            if ($(this).val() == '') {
+               $(this).val('turntable username');
+               $(this).css('color', '#bbb');
+            }
+         });
+         
+         // Find account.
+         $('#btnfind').click(function(e) {
+            $.get('/ajax_brag/'+encodeURIComponent($('#txtusername').val())+'/', function(data) {
+               if (data['error']) {
+                  //console.log('err');
+               } else {
+                  $('#tbox').html('');
+                  twttr.anywhere(function (T) {
+                     T("#tbox").tweetBox({
+                        height: 100,
+                        width: 400,
+                        label: '',
+                        defaultContent: data
+                     });
+                  });
+               }
+            });
+         });
+
+
+         // Update live stats.
+         function updateStats() {
+            $.get('/ajax/home/', function(data) {
+               $('.highlight').fadeOut(400, function() {
+                  $('#rooms').html(data);
+               });
+            });
+         }
+         setInterval(updateStats, 10000);
+      });
+   </script>
+{% endblock %}
+
+
+{% block content %}
+
+<div id="home">
+
+<div id="popup">
+   <div class="content">
+      <div class="right"><img src="/img/cross.png" class="close" alt="close" title="Close" /></div>
+      <h1>Step 1 - Find your turntable user account !</h1>
+      <div class="step1">
+         <input id="txtusername" value="turntable username" style="width: 150px;" />
+         <input type="button" id="btnfind" value="Find" /><br />
+      </div>
+      <h1>Step 2 - Brag about your ranking !</h1>
+      <div id="tbox"><span class="test">You have to find your user account first !</span></div>
+   </div>
+</div>
+
+<div class="right" style="text-align: right;">
+   <!--
+   <p style="width: 400px; margin:0; padding-bottom:5px; font-style: italic;">
+      «SideSpeech creates a chat room between you and the other users of SideSpeech
+      visiting the same domain.»
+   </p>
+   <a class="button greenbtn" href="/sidespeech/" onClick="_gaq.push(['_trackEvent', 'Home', 'Download Sidespeech', 'Download Sidespeech']);">Download SideSpeech</a><br />
+   -->
+   <span style="margin-top: 10px; display: block;"><a href="#" class="button greenbtn" id="brag">Brag about your ranking !</a></span>
+</div>
+
+<h1>Turntable Dashboard !</h1>
+<div class="disclamer">
+   <img src="/img/new.png" alt="" />
+   Create/Edit/Manage <span style="color:red; font-weight:bold;">playlists</span> on your <span style="color:red; font-weight:bold;">profile page</span>. Import/Export to turntable.fm
+</div>
+<div class="disclamer">
+   <img src="/img/error.png" alt="" />
+   This site is not affiliated with or endorsed by <a href="http://turntable.fm/" target="_blank">Turntable.fm</a>
+</div>
+
+<div class="column left">
+   <div class="head">Most appreciated DJs</div>
+   {% for user in users_points %}
+   <div class="user {% cycle "cycle1" "cycle2" %}">
+      <div class="avatar">
+         <img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/{{user.avatarid}}/headfront.png" alt="" />
+      </div>
+      <div class="infos">
+         <span class="username"><a href="/user/{{user.id}}/">{{user.name|slice:":20"}}</a></span>
+         <span class="points">{{user.points}} pts</span>
+      </div>
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+   <div class="footer"><a href="/users/appreciated/">See more...</a></div>
+</div>
+
+<div class="column left">
+   <div class="head">Most popular DJs</div>
+   {% for user in users_fans %}
+   <div class="user {% cycle "cycle1" "cycle2" %}">
+      <div class="avatar">
+         <img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/{{user.avatarid}}/headfront.png" alt="" />
+      </div>
+      <div class="infos">
+         <span class="username"><a href="/user/{{user.id}}/">{{user.name|slice:":20"}}</a></span>
+         <span class="points">{{user.fans}} fans</span>
+      </div>
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+   <div class="footer"><a href="/users/popular/">See more...</a></div>
+</div>
+
+<div class="column left">
+   <div class="head">Most played songs</div>
+   {% for song in pop_songs %}
+   <div class="song {% cycle "cycle1" "cycle2" %}">
+      <div class="avatar">
+         {% if song.coverart %}
+         <img src="{{song.coverart}}" alt="" />
+         {% endif %}
+         {% if not song.coverart %}
+         <img src="/img/record.png" alt="" />
+         {% endif %}
+      </div>
+      <div class="infos">
+         <span class="song_name"><a href="/song/{{song.id}}/">{{song.song}}</a></span>
+         <span class="infos">played {{song.nb_play}} times</span>
+      </div>
+      <div class="clear"></div>
+   </div>
+   {% endfor %}
+   <div class="footer"><a href="/songs/played/">See more...</a></div>
+</div>
+
+<div class="column left" style="width: 398px;">
+   <div class="head">Rooms <strong>live</strong> stats. (auto refresh each 10s)</div>
+   <div id="rooms">
+      {% for room in rooms %}
+      <div class="room {% cycle "cycle1" "cycle2" %}">
+         <span class="name"><a href="/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/">{{room.room_name}}</a></span>
+         <span class="listeners">({{room.room_listeners}} listeners)</span>
+         <div class="more"><a href="/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/">More infos...</a></div>
+         <div class="song">
+            <div class="currently_playing">Currently playing {% if room.current_dj %}<span class="dj">(DJ: <a href="/user/{{room.current_dj_id}}/">{{room.current_dj}}</a>)</span>{% endif %}</div>
+            <div class="avatar">
+               {% if room.song_coverart %}
+               <img src="{{room.song_coverart}}" alt="" />
+               {% endif %}
+               {% if not room.song_coverart %}
+               <img src="/img/record.png" alt="" />
+               {% endif %}
+            </div>
+            <div class="infos">
+               <span class="song_name">{{room.song_name|slice:":50"}}</span>
+               <div class="thumb">
+                  <div class="up"><img src="/img/thumb_up.png" alt="" /><span class="highlight">{{room.upvotes}}</span></div>
+                  <div class="down"><img src="/img/thumb_down.png" alt="" /><span class="highlight">{{room.downvotes}}</span></div>
+               </div>
+            </div>
+         </div>
+         <div class="clear"></div>
+      </div>
+      {% endfor %}
+      <script type="text/javascript">
+         $('.highlight').fadeIn('slow');
+      </script>
+   </div>
+   <!-- <div class="footer"><a href="/rooms/all/">See all rooms...</a></div> -->
+</div>
+
+
+<div class="clear" style="margin: 15px;">&nbsp;</div>
+
+{% if False %}
+<h1>*Warning</h1>
+<p>For some technical reasons, only these rooms are tracked:</p>
+<ul>
+   {% for room in rooms %}
+   <li>{{room.room_name}}</li>
+   {% endfor %}
+</ul>
+{% endif %}
+
+<div style="margin: 10px;">&nbsp;</div>
+</div>
+
+
+{% endblock %}

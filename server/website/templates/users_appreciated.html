@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+
+{% load humanize %}
+
+
+{% block title %}ttDashboard - Top 100 most appreciated DJs{% endblock %}
+{% block meta_keywords %}users, user, appreciated, awesomes, dj, djs, top 100, music, discover, ranking, song, songs, users, user, profile, turntable dashboard, ttdashboard, turntable.fm, turntable, turntablefm, live stats, dashboard, statistiques, statistics, Alain Gilbert{% endblock %}
+
+
+{% block extrahead %}
+   <link rel="stylesheet" media="screen" type="text/css" href="/css/users_appreciated.css" />
+   <script type="text/javascript">
+
+      $(document).ready(function() {
+      });
+   </script>
+{% endblock %}
+
+
+{% block content %}
+
+<div>
+
+   <h1>Top 100 most appreciated DJs</h1>
+
+   <div style="border-top: 1px solid gray; border-bottom: 1px solid gray;">
+      {% for user in appreciated %}
+      <div class="user {% cycle "cycle1" "cycle2" %}">
+         <div class="avatar">
+            <img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/{{user.avatarid}}/headfront.png" alt="" />
+         </div>
+         <div class="infos">
+            <span class="">{{forloop.counter|ordinal}}</span>
+            <span class="username"><a href="/user/{{user.id}}/">{{user.name|slice:":20"}}</a></span>
+            <span class="points">{{user.points}} pts</span>
+         </div>
+         <div class="clear"></div>
+      </div>
+      {% endfor %}
+      <div class="clear"></div>
+   </div>
+
+
+<div class="clear" style="margin: 15px;">&nbsp;</div>
+
+{% if False %}
+<h1>*Warning</h1>
+<p>For some technical reasons, only these rooms are tracked:</p>
+<ul>
+   {% for room in rooms %}
+   <li>{{room.room_name}}</li>
+   {% endfor %}
+</ul>
+{% endif %}
+
+<div style="margin: 10px;">&nbsp;</div>
+</div>
+
+
+{% endblock %}
+

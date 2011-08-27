@@ -1,0 +1,32 @@
+.result {
+   clear: left;
+   padding-top: 10px;
+   padding-bottom: 10px;
+   padding-left: 10px;
+   border-bottom: 1px solid gray;
+}
+.result:hover {
+   background-color: #ddd;
+}
+.result .price {
+   font-weight: bold;
+}
+.result label {
+   width: 100px;
+   display: block;
+   float: left;
+   font-weight: bold;
+}
+.result img {
+   float: left;
+   margin-right: 15px;
+}
+.result .download {
+   font-weight: bold;
+}
+.result .left {
+   float: left;
+}
+.result .right {
+   float: left;
+}

@@ -1,0 +1,47 @@
+.song {
+   height: 70px;
+   width: 198px;
+   border-left: 1px solid gray;
+   border-right: 1px solid gray;
+   overflow: hidden;
+   float: left;
+}
+
+.cycle1 {
+   background-color: #ddd;
+}
+.cycle2 {
+   background-color: #eee;
+}
+
+.song div.avatar {
+   float: left;
+   padding-top: 3px;
+   padding-left: 3px;
+   padding-right: 3px;
+   width: 40px;
+}
+.song div.avatar img {
+   max-width: 40px;
+   max-height: 40px;
+   width: 40px;
+}
+.song div.infos {
+   float: left;
+}
+.song div.infos span.song_name {
+   display: block;
+   overflow: hidden;
+   width: 150px;
+   height: 20px;
+}
+.song div.infos span.song_name a {
+   color: black;
+}
+.song div.infos span.song_name a:hover {
+   text-decoration: none;
+}
+.song div.infos span.infos {
+   color: gray;
+   font-size: 13px;
+}

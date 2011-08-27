@@ -1,0 +1,22 @@
+.playlist {
+   background-color: #eee;
+   float: left;
+   border: 1px solid #ccc;
+   margin: 5px;
+   color: #555;
+}
+.playlist:hover {
+   background-color: #ddd;
+}
+
+.playlist input {
+   float: left;
+   display: block;
+   margin: 5px 5px 5px 5px;
+}
+.playlist label {
+   display: block;
+   width: 200px;
+   float: left;
+   cursor: pointer;
+}

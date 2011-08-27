@@ -1,0 +1,209 @@
+.highlight {
+   display: none;
+}
+
+#home h1 {
+   font-weight: bold;
+   font-size: 22px;
+   margin: 8px 0 25px 0;
+}
+
+#home ul {
+   list-style-type: disc;
+   list-style-position: inside;
+}
+#home ul li {
+   margin-left: 20px;
+}
+
+#home div.disclamer {
+   margin-bottom: 15px;
+   margin-left: 20px;
+   font-style: italic;
+}
+.disclamer strong {
+   color: red;
+   font-weight: bold;
+}
+#home div.disclamer a {
+   color: gray;
+}
+#home div.disclamer a:hover {
+   text-decoration: none;
+}
+
+#home .right {
+   float: right;
+}
+
+div.column {
+   width: 198px;
+   background-color: #ddd;
+   border: 1px solid gray;
+}
+div.column div.head {
+   background-color: white;
+   font-size: 18px;
+   text-align: center;
+   height: 30px;
+}
+div.column div.head strong {
+   color: red;
+   font-weight: bold;
+}
+div.column div.footer {
+   padding: 5px;
+   border-top: 1px solid gray;
+   background-color: white;
+}
+
+
+div.column div.user, div.column div.song {
+   height: 50px;
+   overflow: hidden;
+}
+
+div.column div.cycle1 {
+   background-color: #ddd;
+}
+div.column div.cycle2 {
+   background-color: #eee;
+}
+
+div.column div.user div.avatar {
+   float: left;
+   padding-top: 3px;
+   padding-left: 3px;
+   padding-right: 3px;
+   width: 40px;
+}
+div.column div.user div.avatar img {
+   max-width: 40px;
+   max-height: 40px;
+   width: 40px;
+}
+div.column div.user div.infos {
+   float: left;
+}
+div.column div.user div.infos span.username {
+   display: block;
+   overflow: hidden;
+   height: 20px;
+   width: 152px;
+}
+div.column div.user div.infos span.username a {
+   color: black;
+}
+div.column div.user div.infos span.username a:hover {
+   text-decoration: none;
+}
+div.column div.user div.infos span.points {
+   color: gray;
+   font-size: 13px;
+}
+
+
+div.column div.song div.avatar {
+   float: left;
+   padding-top: 3px;
+   padding-left: 3px;
+   padding-right: 3px;
+   width: 40px;
+}
+div.column div.song div.avatar img {
+   max-width: 40px;
+   max-height: 40px;
+   width: 40px;
+}
+div.column div.song div.infos {
+   float: left;
+}
+div.column div.song div.infos span.song_name {
+   display: block;
+   overflow: hidden;
+   width: 150px;
+   height: 20px;
+}
+div.column div.song div.infos span.song_name a {
+   color: black;
+}
+div.column div.song div.infos span.song_name a:hover {
+   text-decoration: none;
+}
+div.column div.song div.infos span.infos {
+   color: gray;
+   font-size: 13px;
+}
+
+
+
+div.column div.room {
+   height: 94px;
+   padding: 3px;
+}
+div.column div.room span.name {
+   font-weight: bold;
+}
+div.column div.room span.name a {
+   color: black;
+}
+div.column div.room span.name a:hover {
+   text-decoration: none;
+}
+div.column div.room span.listeners {
+   color: gray;
+}
+div.column div.room div.more {
+   float: right;
+   font-size: 12px;
+}
+div.column div.room div.song {
+   overflow: visible;
+}
+div.column div.room div.song div.currently_playing {
+   font-size: 13px;
+}
+div.column div.room div.song div.currently_playing a {
+   color: gray;
+}
+div.column div.room div.song div.currently_playing a:hover {
+   text-decoration: none;
+}
+div.column div.room div.song div.currently_playing span.dj {
+   color: gray;
+}
+div.column div.room div.song div.avatar {
+   float: left;
+}
+div.column div.room div.song div.avatar img {
+   max-width: 40px;
+   max-height: 40px;
+   margin-right: 8px;
+}
+div.column div.room div.song div.infos img {
+   float: left;
+}
+div.column div.room div.song div.infos span.song_name {
+   width: 337px;
+   height: 20px;
+   font-size: 13px;
+   display: block;
+}
+div.column div.room div.song div.infos div.thumb {
+   color: #666;
+}
+div.column div.room div.song div.infos div.thumb img {
+   margin-right: 4px;
+}
+div.column div.room div.song div.infos div.thumb div.up {
+   float: left;
+   min-width: 35px;
+   margin-right: 15px;
+   color: green;
+   font-weight: bold;
+}
+div.column div.room div.song div.infos div.thumb div.down {
+   float: left;
+   color: red;
+   font-weight: bold;
+}

@@ -4,6 +4,8 @@
 *.pem
 *.crx
 *.mwb
+*.pyc
 server/gatherer/node_modules
 server/gatherer/settings.js
 server/gatherer/doc/
+server/website/settings.py

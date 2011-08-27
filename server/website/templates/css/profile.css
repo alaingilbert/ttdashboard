@@ -1,0 +1,56 @@
+.step2 {
+   overflow: scroll;
+   margin-top: 20px;
+   height: 230px;
+}
+.ajax_user {
+   border-bottom: 1px solid gray;
+}
+.ajax_user:hover {
+   background-color: #ddd;
+}
+.ajax_avatar {
+   width: 20px;
+   height: 20px;
+   float: left;
+}
+.ajax_avatar img {
+   max-width: 16px;
+   max-height: 16px;
+}
+.error {
+   background-color: #ffe1e1;
+   border: 1px solid #6f2f2f;
+   color: #6f2f2f;
+   padding: 6px;
+   margin: 10px 0;
+}
+h2 {
+   margin: 25px 0 15px 0;
+   font-weight: bold;
+   font-size: 20px;
+}
+.song {
+   height: 65px;
+}
+.coverart {
+   width: 65px;
+   height: 65px;
+   float: left;
+}
+.coverart img {
+   max-width: 54px;
+   max-height: 54px;
+}
+
+#profile label {
+   float: left;
+   font-weight: bold;
+   width: 160px;
+   display: block;
+}
+
+.gray_link {
+   font-size: 12px;
+   color: #555;
+}
