@@ -11,6 +11,9 @@ CREATE TABLE users (
 
    CONSTRAINT        users_pk PRIMARY KEY (id)
 );
+CREATE INDEX users_lower_name_idx ON users (lower(name));
+CREATE INDEX users_fans_idx       ON users (fans);
+CREATE INDEX users_points_idx     ON users (points);
 
 
 CREATE TABLE songs (
@@ -30,6 +33,10 @@ CREATE TABLE songs (
 
    CONSTRAINT        songs_pk PRIMARY KEY (id)
 );
+CREATE INDEX songs_lower_album_idx  ON songs (lower(album));
+CREATE INDEX songs_lower_artist_idx ON songs (lower(artist));
+CREATE INDEX songs_lower_song_idx   ON songs (lower(song));
+CREATE INDEX songs_nb_play_idx      ON songs (nb_play);
 
 
 CREATE TABLE rooms (
@@ -59,6 +66,8 @@ CREATE TABLE rooms (
                               FOREIGN KEY (current_dj)
                               REFERENCES users(id) ON DELETE CASCADE
 );
+CREATE INDEX rooms_lower_name_idx     ON rooms (lower(name));
+CREATE INDEX rooms_lower_shortcut_idx ON rooms (lower(shortcut));
 
 
 CREATE TABLE chat_log (
@@ -67,6 +76,7 @@ CREATE TABLE chat_log (
    room_id           bigint NOT NULL,
    name              character varying(255) NOT NULL,
    text              text NOT NULL,
+   text_tsv          tsvector,
    created           timestamp with time zone DEFAULT current_timestamp NOT NULL,
 
    CONSTRAINT        chat_log_pk PRIMARY KEY (id),
@@ -79,6 +89,12 @@ CREATE TABLE chat_log (
                         FOREIGN KEY (room_id)
                         REFERENCES rooms(id) ON DELETE CASCADE
 );
+CREATE TRIGGER tsvectorupdate BEFORE INSERT ON chat_log 
+   FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.english', text);
+
+CREATE INDEX chat_log_text_tsv    ON chat_log USING gin(text_tsv);
+CREATE INDEX chat_log_created_idx ON chat_log (created);
+
 
 
 CREATE TABLE song_log (
@@ -130,3 +146,5 @@ CREATE TABLE users_songs_liked (
                         FOREIGN KEY (song_id)
                         REFERENCES songs(id)
 );
+CREATE INDEX users_songs_liked_nb_awesomes_idx ON users_songs_liked (nb_awesomes);
+CREATE INDEX users_songs_liked_nb_lames_idx    ON users_songs_liked (nb_lames);
