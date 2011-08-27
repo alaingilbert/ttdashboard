@@ -84,6 +84,9 @@ CREATE TABLE chat_log (
 CREATE TABLE song_log (
    room_id           bigint NOT NULL,
    song_id           bigint NOT NULL,
+   song_name         character varying(255),
+   song_artist       character varying(255),
+   song_album        character varying(255),
    starttime         timestamp with time zone NOT NULL,
    upvotes           int DEFAULT 0 NOT NULL,
    downvotes         int DEFAULT 0 NOT NULL,
@@ -91,7 +94,7 @@ CREATE TABLE song_log (
    dj_name           character varying(255),
    dj_count          int DEFAULT 0 NOT NULL,
    listeners         int DEFAULT 0 NOT NULL,
-   created           timestamp with time zone NOT NULL,
+   created           timestamp with time zone DEFAULT current_timestamp NOT NULL,
 
    CONSTRAINT        song_log_pk
                         PRIMARY KEY (room_id, song_id, starttime),
@@ -113,7 +116,7 @@ CREATE TABLE song_log (
 CREATE TABLE users_songs_liked (
    user_id           bigint NOT NULL,
    song_id           bigint NOT NULL,
-   nb_aesomes        int DEFAULT 0 NOT NULL,
+   nb_awesomes       int DEFAULT 0 NOT NULL,
    nb_lames          int DEFAULT 0 NOT NULL,
    modified          timestamp with time zone DEFAULT current_timestamp NOT NULL,
 
