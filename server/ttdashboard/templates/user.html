@@ -21,7 +21,6 @@
    <div class="infos">
       <h1>{{tuser.name}}</h1>
       <label>Platform:</label><span>{{tuser.laptop}}</span><br />
-      <label style="color: #f0f;">Hugs points:</label><span class="left" style="width: 70px; color: #f0f; font-weight: bold;">{{hugspoints}}</span><br />
       <label>points:</label><span class="left" style="width: 70px;">{{tuser.points}}</span><span class="rank">( <img src="/img/star.png" alt="" /> {{rank_points|ordinal|intcomma}} )</span><br />
       <label>fans:</label><span class="left" style="width: 70px;">{{tuser.fans}}</span><span class="rank">( <img src="/img/star.png" alt="" /> {{rank_fans|ordinal|intcomma}} )</span><br />
       <label>Appreciation:</label>
@@ -51,7 +50,7 @@
                <label>Song name:</label><span><a href="/song/{{log.song_id}}/">{{log.song_name}}</a></span><br />
                <label>Album:</label><span>{{log.song_album}}</span><br />
                <label>Artist:</label><span>{{log.song_artist}}</span><br />
-               <label>Date:</label><span>{{log.starttime}}</span><br />
+               <label>Date:</label><span>{{log.created}}</span><br />
                <label>Appreciation:</label>
                <div class="thumb">
                   <div class="up auto"><img src="/img/thumb_up.png" alt="" /><span class="auto">{{log.upvotes}}</span></div>
@@ -135,7 +134,7 @@
             <div class="clear"></div>
          </div>
       {% empty %}
-         <div>This user has not liked any song yet.</div>
+         <div>This user has not disliked any song yet.</div>
       {% endfor %}
       </div>
    </div>

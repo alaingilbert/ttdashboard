@@ -155,7 +155,6 @@ var sockets = {
       var song       = metadata.$get('current_song');
       var roomid     = room.$get('roomid');
       var songid     = song.$get('_id');
-      var starttime  = song.$get('starttime');
       var album      = song.metadata.$get('album');
       var artist     = song.metadata.$get('artist');
       var songName   = song.metadata.$get('song');
@@ -171,20 +170,24 @@ var sockets = {
 
       // Create and get the song
       self.db['song.createUpdate'](songid, album, artist, songName, coverart, length,
-                                   mnid, genre, filepath,bitrate, function (err, songObj) {
+                                   mnid, genre, filepath,bitrate, function (err, songObj) { if (!err) {
 
       // Increment the nb_play counter of the song
-      self.db['song.incrementNbPlay'](songid, function (err, res) {
+      self.db['song.incrementNbPlay'](songid, function (err, res) { if (!err) {
 
       // Get the current dj
-      self.db['user.get'](currentDj, function (err, djObj) {
+      self.db['user.get'](currentDj, function (err, djObj) { if (!err) {
 
       // Update informations of the room
-      var update = { listeners: listeners, upvotes: 0, downvotes: 0,
-                     current_song: songObj.id, current_song_name: songName,
-                     song_starttime: starttime, current_dj: djObj.id,
-                     current_dj_name: djObj.name };
-      self.db['room.update'](roomid, update, function (err, roomObj) {
+      var update = { listeners: listeners
+                   , upvotes: 0
+                   , downvotes: 0
+                   , current_song: songObj.id
+                   , current_song_name: songName
+                   , current_dj: djObj.id
+                   , current_dj_name: djObj.name
+                   };
+      self.db['room.update'](roomid, update, function (err, roomObj) { if (!err) {
 
       // Get the informations about the room
       socket.get('room', function (err, sckRoom) {
@@ -194,27 +197,34 @@ var sockets = {
 
       // Create the song log
       self.db['songlog.create'](sckRoom.id, sckSong.id, sckSong.songName, sckSong.songArtist,
-                                sckSong.songAlbum, sckSong.starttime, sckSong.upvotes,
+                                sckSong.songAlbum, sckSong.songCoverart, sckSong.songLength, sckSong.upvotes,
                                 sckSong.downvotes, sckSong.djId, sckSong.djName, djCount,
-                                listeners, function (err, log) {
+                                listeners, function (err, log) { if (!err) {
 
       // Set the new informations about the current song
-      socket.set('currentSong', { id:         songObj.id
-                                , songid:     songObj.songid
-                                , songName:   songObj.song
-                                , songArtist: songObj.artist
-                                , songAlbum:  songObj.album
-                                , upvotes:    0
-                                , downvotes:  0
-                                , djId:       djObj.id
-                                , djName:     djObj.name
-                                , starttime:  new Date(starttime * 1000).toISOString()
-                                }, function (err, res) {
+      socket.set('currentSong', { id:           songObj.id
+                                , songid:       songObj.songid
+                                , songName:     songObj.song
+                                , songArtist:   songObj.artist
+                                , songAlbum:    songObj.album
+                                , songCoverart: songObj.coverart
+                                , songLength:   songObj.length
+                                , upvotes:      0
+                                , downvotes:    0
+                                , djId:         djObj.id
+                                , djName:       djObj.name
+                                }, function () {
 
       callback(null, true);
 
-      }); }); }); }); }); }); });
       });
+      } else { callback(err, null); } });
+      });
+      });
+      } else { callback(err, null); } });
+      } else { callback(err, null); } });
+      } else { callback(err, null); } });
+      } else { callback(err, null); } });
    },
 
 
@@ -238,7 +248,6 @@ var sockets = {
       var moderator_id   = null;
       var currentDjId    = currentSong.djId;
       var currentDjName  = currentSong.djName;
-      var song_starttime = null;
       var song_id        = null;
 
       // Get the room informations
@@ -311,10 +320,8 @@ var sockets = {
       var listeners    = metadata.$get('listeners');
       var downvotes    = metadata.$get('downvotes');
       var upvotes      = metadata.$get('upvotes');
-      var starttime    = null;
       var songid       = null;
       if (current_song) {
-         starttime = new Date(current_song.starttime * 1000).toISOString();
          songid    = current_song.$get('_id');
       }
 
@@ -328,14 +335,13 @@ var sockets = {
          self.db['song.get'](songid, function (err, currentSong) {
             var currentSongId        = null;
             var currentSongName      = null;
-            var currentSongStarttime = starttime;
             if (currentSong) {
                currentSongId        = currentSong.id;
                currentSongName      = currentSong.song;
             }
             self.db['room.createUpdate'](roomid, name, created, description, shortcut, currentDjId,
                                          currentDjName, listeners, upvotes, downvotes, currentSongId,
-                                         currentSongName, currentSongStarttime,
+                                         currentSongName,
                                          function (err, roomObj) { if (!err) {
 
                function createUserRecurs (users) {
@@ -400,8 +406,8 @@ var sockets = {
                   function step3 () {
                      socket.set('room', { id: roomObj.id, roomid: roomObj.roomid }, function () {
                         if (songid) {
-                           self.db['song.get'](songid, function (err, songObj) {
-                              if (!songObj) { songObj = { id: null, name: null, starttime: null }; }
+                           self.db['song.get'](songid, function (err, songObj) { if (!err) {
+                              if (!songObj) { songObj = { id: null, name: null }; }
                               self.db['user.get'](current_dj, function (err, currentDj) {
                                  var currentDjId   = null;
                                  var currentDjName = null;
@@ -412,37 +418,38 @@ var sockets = {
                                  self.db['room.createUpdate'](roomid, name, created, description, shortcut,
                                                               currentDjId, currentDjName, listeners, upvotes,
                                                               downvotes, songObj.id, songObj.song,
-                                                              songObj.starttime,
                                                               function (err, room) {
-                                    socket.set('currentSong', { id:         songObj.id,
-                                                                songid:     songObj.songid,
-                                                                songName:   songObj.song,
-                                                                songArtist: songObj.artist,
-                                                                songAlbum:  songObj.album,
-                                                                upvotes:    upvotes,
-                                                                downvotes:  downvotes,
-                                                                djId:       currentDjId,
-                                                                djName:     currentDjName,
-                                                                starttime:  starttime
-                                                               }, function (err, res) { if (!err) {
+                                    socket.set('currentSong', { id:           songObj.id
+                                                              , songid:       songObj.songid
+                                                              , songName:     songObj.song
+                                                              , songArtist:   songObj.artist
+                                                              , songAlbum:    songObj.album
+                                                              , songCoverart: songObj.coverart
+                                                              , songLength:   songObj.length
+                                                              , upvotes:      upvotes
+                                                              , downvotes:    downvotes
+                                                              , djId:         currentDjId
+                                                              , djName:       currentDjName
+                                                              }, function (err, res) { if (!err) {
                                        callback(null, true);
                                     } else { return callback(err, null); } });
                                  });
                               });
-                           });
+                           } else { callback(err, null); } });
                         } else {
-                           socket.set('currentSong', { id:         null,
-                                                       songid:     null,
-                                                       songName:   null,
-                                                       songArtist: null,
-                                                       songAlbum:  null,
-                                                       upvotes:    null,
-                                                       downvotes:  null,
-                                                       djId:       null,
-                                                       djName:     null,
-                                                       starttime:  null
-                                                      }, function () {
-                              callback(null, true);
+                           socket.set('currentSong', { id:           null
+                                                     , songid:       null
+                                                     , songName:     null
+                                                     , songArtist:   null
+                                                     , songAlbum:    null
+                                                     , songCoverart: null
+                                                     , songLength:   null
+                                                     , upvotes:      null
+                                                     , downvotes:    null
+                                                     , djId:         null
+                                                     , djName:       null
+                                                     }, function () {
+                              callback('SHOULD NEVER PASS HERE', null);
                            });
                         }
                      });

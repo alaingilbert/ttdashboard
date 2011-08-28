@@ -844,11 +844,11 @@ def songs(req):
                         SUM(sl.upvotes) AS upvotes, \
                         s.coverart, s.id, s.song \
                       FROM songs AS s \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.songid = s.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.song_id = s.id \
                       WHERE \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY sl.songid \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY sl.song_id, s.id, s.song, s.coverart \
                       ORDER BY upvotes DESC \
                       LIMIT 10")
       ups = dict_cursor(cursor)
@@ -862,11 +862,11 @@ def songs(req):
                         SUM(sl.downvotes) AS downvotes, \
                         s.coverart, s.id, s.song \
                       FROM songs AS s \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.songid = s.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.song_id = s.id \
                       WHERE \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY sl.songid \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY sl.song_id, s.id, s.song, s.coverart \
                       ORDER BY downvotes DESC \
                       LIMIT 10")
       downs = dict_cursor(cursor)
@@ -880,11 +880,11 @@ def songs(req):
                         SUM(sl.upvotes) - SUM(sl.downvotes) AS votes, \
                         s.coverart, s.id, s.song \
                       FROM songs AS s \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.songid = s.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.song_id = s.id \
                       WHERE \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY sl.songid \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY sl.song_id, s.id, s.song, s.coverart \
                       ORDER BY votes DESC \
                       LIMIT 10")
       combined = dict_cursor(cursor)
@@ -895,14 +895,14 @@ def songs(req):
 
    if not cache.get('songs_pop_songs'):
       cursor.execute("SELECT \
-                        COUNT(sl.songid) AS nb_play, \
+                        COUNT(sl.song_id) AS nb_play, \
                         s.coverart, s.id, s.song \
                       FROM songs AS s \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.songid = s.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.song_id = s.id \
                       WHERE \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY sl.songid \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY sl.song_id, s.id, s.song, s.coverart \
                       ORDER BY nb_play DESC \
                       LIMIT 10")
       pop_songs = dict_cursor(cursor)
@@ -988,8 +988,8 @@ def song(req, song_id):
 
    cursor.execute("SELECT SUM(sl.upvotes) AS upvotes, \
                      SUM(sl.downvotes) AS downvotes \
-                   FROM songlog AS sl \
-                   WHERE sl.songid=%s \
+                   FROM song_log AS sl \
+                   WHERE sl.song_id=%s \
                    LIMIT 1" % (int(song_id)))
    votes = dict_cursor(cursor)[0]
    song['upvotes'] = votes['upvotes']
@@ -997,19 +997,18 @@ def song(req, song_id):
 
    cursor.execute("SELECT sl.upvotes AS upvotes, \
                      sl.downvotes AS downvotes, \
-                     sl.starttime, \
-                     sl.current_dj AS current_dj_id, \
+                     sl.dj AS current_dj_id, \
                      u.name AS current_dj, \
                      r.name AS room_name, \
                      r.roomid AS roomid, \
                      r.shortcut AS room_shortcut \
-                   FROM songlog AS sl \
+                   FROM song_log AS sl \
                    LEFT JOIN users AS u \
-                     ON u.id = sl.current_dj \
+                     ON u.id = sl.dj \
                    LEFT JOIN rooms AS r \
-                     ON r.id = sl.roomid \
-                   WHERE sl.songid=%s \
-                   ORDER BY sl.starttime DESC \
+                     ON r.id = sl.room_id \
+                   WHERE sl.song_id=%s \
+                   ORDER BY sl.created DESC \
                    LIMIT 20" % (int(song_id)))
    appreciation_log = dict_cursor(cursor)
 
@@ -1037,7 +1036,9 @@ def ajax_room_infos(req, shortcut):
 
    cursor = connection.cursor()
 
-   cursor.execute("SELECT r.id AS room_id, r.name AS room_name, \
+   cursor.execute("SELECT \
+                     r.id AS room_id, \
+                     r.name AS room_name, \
                      r.description AS room_description, \
                      r.shortcut AS room_shortcut, \
                      r.listeners AS room_listeners, \
@@ -1052,16 +1053,12 @@ def ajax_room_infos(req, shortcut):
                      s.album AS song_album, \
                      s.artist AS song_artist, \
                      s.coverart AS song_coverart, \
-                     u.name AS current_dj, \
-                     m.id AS mod_id, \
-                     m.name AS mod_name \
+                     u.name AS current_dj \
                    FROM rooms AS r \
                    LEFT JOIN songs AS s \
                      ON s.id = r.current_song \
                    LEFT JOIN users AS u \
                      ON u.id = r.current_dj \
-                   LEFT JOIN users AS m \
-                     ON m.userid = r.moderator_id \
                    WHERE %s='%s' \
                    LIMIT 1" % (where, str(shortcut)))
 
@@ -1115,7 +1112,9 @@ def room(req, shortcut):
 
    cursor = connection.cursor()
 
-   cursor.execute("SELECT r.id AS room_id, r.name AS room_name, \
+   cursor.execute("SELECT \
+                     r.id AS room_id, \
+                     r.name AS room_name, \
                      r.description AS room_description, \
                      r.shortcut AS room_shortcut, \
                      r.listeners AS room_listeners, \
@@ -1123,23 +1122,18 @@ def room(req, shortcut):
                      r.downvotes, \
                      r.upvotes, \
                      r.current_dj AS current_dj_id, \
+                     r.current_dj_name AS current_dj, \
+                     r.current_song AS CALISS, \
                      s.id AS song_id, \
                      s.nb_play AS room_nb_play, \
                      s.length AS song_length, \
                      s.song AS song_name, \
                      s.album AS song_album, \
                      s.artist AS song_artist, \
-                     s.coverart AS song_coverart, \
-                     u.name AS current_dj, \
-                     m.id AS mod_id, \
-                     m.name AS mod_name \
+                     s.coverart AS song_coverart \
                    FROM rooms AS r \
                    LEFT JOIN songs AS s \
                      ON s.id = r.current_song \
-                   LEFT JOIN users AS u \
-                     ON u.id = r.current_dj \
-                   LEFT JOIN users AS m \
-                     ON m.userid = r.moderator_id \
                    WHERE %s='%s' \
                    LIMIT 1" % (where, str(shortcut)))
 
@@ -1164,38 +1158,35 @@ def room(req, shortcut):
       last = int(req.GET.get('last', 0))
       limit = last+1
    else:
-      limit = 1
+      limit = 0
 
-   cursor.execute("SELECT s.coverart, \
-                     s.id AS song_id, \
-                     s.song, \
-                     s.artist, \
+   cursor.execute("SELECT \
+                     sl.song_coverart AS coverart, \
+                     sl.song_id AS song_id, \
+                     sl.song_name AS song, \
+                     sl.song_artist AS artist, \
                      sl.upvotes, sl.downvotes, \
-                     sl.starttime, \
-                     sl.current_dj AS current_dj_id, \
-                     u.name AS current_dj \
-                   FROM songlog AS sl \
-                   LEFT JOIN songs AS s \
-                     ON s.id = sl.songid \
-                   LEFT JOIN users AS u \
-                     ON u.id = sl.current_dj \
-                   WHERE roomid=%s \
-                   ORDER BY starttime DESC \
-                   LIMIT %s, 20", [int(room['room_id']), limit])
+                     sl.dj AS current_dj_id, \
+                     sl.dj_name AS current_dj \
+                   FROM song_log AS sl \
+                   WHERE sl.room_id=%s \
+                   ORDER BY sl.created DESC \
+                   LIMIT 20 OFFSET %s", [room['room_id'], limit])
    songs_log = dict_cursor(cursor)
 
    content = {'room':room, 'songs_log':songs_log}
 
 
    if not req.is_ajax():
-      cursor.execute("SELECT rs.listeners, rs.created \
-                      FROM room_stats AS rs \
-                      WHERE rs.roomid=%s \
-                        AND DATE(rs.created) = DATE(NOW()) \
-                      ORDER BY rs.created" % (int(room['room_id'])))
+      cursor.execute("SELECT sl.listeners, sl.created \
+                      FROM song_log AS sl \
+                      WHERE sl.room_id=%s \
+                        AND sl.created::date = CURRENT_DATE \
+                      ORDER BY sl.created", [room['room_id']])
       room_stats = dict_cursor(cursor)
+      print room_stats;
 
-      content.update({'room_stats':room_stats})
+      content.update({'room_stats': room_stats})
 
 
    if req.is_ajax():
@@ -1221,11 +1212,12 @@ def rooms(req):
                         r.upvotes AS song_upvotes, \
                         r.downvotes AS song_downvotes \
                       FROM rooms AS r \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.roomid = r.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.room_id = r.id \
                       WHERE \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY r.id \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY r.id, r.roomid, r.name, r.listeners, r.shortcut, \
+                        r.upvotes, r.downvotes \
                       ORDER BY upvotes DESC \
                       LIMIT 10")
       ups = dict_cursor(cursor)
@@ -1245,11 +1237,12 @@ def rooms(req):
                         r.upvotes AS song_upvotes, \
                         r.downvotes AS song_downvotes \
                       FROM rooms AS r \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.roomid = r.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.room_id = r.id \
                       WHERE \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY r.id \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY r.id, r.roomid, r.name, r.listeners, r.shortcut, \
+                        r.upvotes, r.downvotes \
                       ORDER BY downvotes DESC \
                       LIMIT 10")
       downs = dict_cursor(cursor)
@@ -1269,11 +1262,12 @@ def rooms(req):
                         r.upvotes AS song_upvotes, \
                         r.downvotes AS song_downvotes \
                       FROM rooms AS r \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.roomid = r.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.room_id = r.id \
                       WHERE \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY r.id \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY r.id, r.roomid, r.name, r.listeners, r.shortcut, \
+                        r.upvotes, r.downvotes \
                       ORDER BY votes DESC \
                       LIMIT 10")
       combined = dict_cursor(cursor)
@@ -1291,12 +1285,13 @@ def rooms(req):
                         r.listeners AS room_listeners, \
                         r.shortcut AS room_shortcut \
                       FROM rooms AS r \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.roomid = r.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.room_id = r.id \
                       WHERE \
-                        sl.current_dj IS NOT NULL AND \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY r.id \
+                        sl.dj IS NOT NULL AND \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY r.id, r.roomid, r.name, r.listeners, r.shortcut, \
+                        r.upvotes, r.downvotes \
                       ORDER BY moyenne DESC \
                       LIMIT 10")
       active = dict_cursor(cursor)
@@ -1344,30 +1339,31 @@ def user(req, user_id):
    # Get how many up and down he got as a DJ.
    cursor.execute("SELECT SUM(sl.upvotes) AS upvotes, \
                      SUM(sl.downvotes) AS downvotes \
-                   FROM songlog AS sl \
-                   WHERE sl.current_dj=%s \
+                   FROM song_log AS sl \
+                   WHERE sl.dj=%s \
                    LIMIT 1" % (int(user_id)))
    votes = dict_cursor(cursor)[0]
    user['upvotes'] = votes['upvotes']
    user['downvotes'] = votes['downvotes']
 
    # Songs that the user has played.
-   cursor.execute("SELECT sl.starttime, sl.upvotes, sl.downvotes, \
+   cursor.execute("SELECT \
+                     sl.created, \
+                     sl.upvotes, \
+                     sl.downvotes, \
                      r.name AS room_name, \
                      r.roomid AS roomid, \
                      r.shortcut AS room_shortcut, \
-                     s.id AS song_id, \
-                     s.song AS song_name, \
-                     s.artist AS song_artist, \
-                     s.coverart AS song_coverart, \
-                     s.album AS song_album \
-                   FROM songlog AS sl \
+                     sl.song_id AS song_id, \
+                     sl.song_name AS song_name, \
+                     sl.song_artist AS song_artist, \
+                     sl.song_coverart AS song_coverart, \
+                     sl.song_album AS song_album \
+                   FROM song_log AS sl \
                    LEFT JOIN rooms AS r \
-                     ON r.id = sl.roomid \
-                   LEFT JOIN songs AS s \
-                     ON s.id = sl.songid \
-                   WHERE sl.current_dj=%s \
-                   ORDER BY sl.starttime DESC \
+                     ON r.id = sl.room_id \
+                   WHERE sl.dj=%s \
+                   ORDER BY sl.created DESC \
                    LIMIT 30" % (int(user_id)))
    songs_log = dict_cursor(cursor)
    
@@ -1385,6 +1381,7 @@ def user(req, user_id):
                    LEFT JOIN songs AS s \
                      ON s.id = sl.song_id \
                    WHERE sl.user_id='%s' \
+                     AND sl.nb_awesomes > 0 \
                    ORDER BY nb_awesomes DESC, sl.modified DESC \
                    LIMIT 30" % int(user_id))
    songs_like = dict_cursor(cursor)
@@ -1403,6 +1400,7 @@ def user(req, user_id):
                    LEFT JOIN songs AS s \
                      ON s.id = sl.song_id \
                    WHERE sl.user_id='%s' \
+                     AND sl.nb_lames > 0 \
                    ORDER BY nb_lames DESC, sl.modified DESC \
                    LIMIT 30" % int(user_id))
    songs_dislike = dict_cursor(cursor)
@@ -1420,10 +1418,7 @@ def user(req, user_id):
    rank_fans = dict_cursor(cursor)[0]['rank']+1
 
 
-   cursor.execute("SELECT COUNT(*) AS hugspoints FROM chatlog WHERE userid=%s AND text like '%%hugs%%'", [user_id])
-   hugspoints = dict_cursor(cursor)[0]['hugspoints']
-
-   return render_to_response('user.html', {'onglet':'users', 'tuser':user, 'songs_log':songs_log, 'songs_like':songs_like, 'songs_dislike':songs_dislike, 'rank_points':rank_points, 'rank_fans':rank_fans, 'hugspoints':hugspoints}, context_instance=RequestContext(req))
+   return render_to_response('user.html', { 'onglet':'users', 'tuser':user, 'songs_log':songs_log, 'songs_like':songs_like, 'songs_dislike':songs_dislike, 'rank_points':rank_points, 'rank_fans':rank_fans }, context_instance=RequestContext(req))
 
 
 def ajax_uid_brag(req, uid):
@@ -1530,9 +1525,9 @@ def chat(req, chatlog_id):
 
    cursor.execute("SELECT \
                      cl.id, \
-                     cl.roomid AS log_roomid, \
+                     cl.room_id AS log_roomid, \
                      cl.created, \
-                     cl.userid, \
+                     cl.user_id, \
                      u.id AS user_id, \
                      u.avatarid AS user_avatar, \
                      u.name AS user_name, \
@@ -1542,11 +1537,11 @@ def chat(req, chatlog_id):
                      r.roomid AS roomid, \
                      r.shortcut AS room_shortcut, \
                      r.name AS room_name \
-                   FROM chatlog AS cl \
+                   FROM chat_log AS cl \
                    LEFT JOIN users AS u \
-                     ON u.id = cl.userid \
+                     ON u.id = cl.user_id \
                    LEFT JOIN rooms AS r \
-                     ON r.id = cl.roomid \
+                     ON r.id = cl.room_id \
                    WHERE cl.id=%s \
                    LIMIT 1", [chatlog_id])
    chatlog = dict_cursor(cursor)[0]
@@ -1555,13 +1550,13 @@ def chat(req, chatlog_id):
                      cl.id, \
                      cl.name, \
                      cl.created, \
-                     cl.roomid, \
-                     cl.userid, \
+                     cl.room_id, \
+                     cl.user_id, \
                      cl.text \
-                   FROM chatlog AS cl \
-                   WHERE cl.roomid=%s \
-                   AND cl.created > DATE_SUB(%s, INTERVAL 5 MINUTE) \
-                   AND cl.created < DATE_ADD(%s, INTERVAL 5 MINUTE) \
+                   FROM chat_log AS cl \
+                   WHERE cl.room_id=%s \
+                   AND cl.created > %s - INTERVAL '5' MINUTE \
+                   AND cl.created < %s + INTERVAL '5' MINUTE \
                    ", [chatlog['log_roomid'], chatlog['created'], chatlog['created']])
    history = dict_cursor(cursor)
 
@@ -1598,11 +1593,11 @@ def users(req):
                         SUM(sl.upvotes) AS upvotes, \
                         u.name, u.id, u.avatarid \
                       FROM users AS u \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.current_dj = u.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.dj = u.id \
                       WHERE \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY sl.current_dj \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY sl.dj, u.name, u.id, u.avatarid \
                       ORDER BY upvotes DESC \
                       LIMIT 10")
       ups = dict_cursor(cursor)
@@ -1616,11 +1611,11 @@ def users(req):
                         SUM(sl.downvotes) AS downvotes, \
                         u.name, u.id, u.avatarid \
                       FROM users AS u \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.current_dj = u.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.dj = u.id \
                       WHERE \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY sl.current_dj \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY sl.dj, u.name, u.id, u.avatarid \
                       ORDER BY downvotes DESC \
                       LIMIT 10")
       downs = dict_cursor(cursor)
@@ -1634,11 +1629,11 @@ def users(req):
                         SUM(sl.upvotes) - SUM(sl.downvotes) AS votes, \
                         u.name, u.id, u.avatarid \
                       FROM users AS u \
-                      LEFT JOIN songlog AS sl \
-                        ON sl.current_dj = u.id \
+                      LEFT JOIN song_log AS sl \
+                        ON sl.dj = u.id \
                       WHERE \
-                        sl.starttime > DATE_SUB(NOW(), INTERVAL 24 HOUR) \
-                      GROUP BY sl.current_dj \
+                        sl.created > CURRENT_DATE - INTERVAL '1' DAY \
+                      GROUP BY sl.dj, u.name, u.id, u.avatarid \
                       ORDER BY votes DESC \
                       LIMIT 10")
       combined = dict_cursor(cursor)
@@ -1716,8 +1711,8 @@ def search(req):
       db_from = "songs"
       db_where = ['album', 'artist', 'song', 'genre']
    elif what == 'chat':
-      db_select = "cl.id, cl.userid, cl.roomid, cl.name, cl.text, cl.created, r.id AS room_id, r.name AS room_name, r.shortcut AS room_shortcut"
-      db_from = "chatlog AS cl LEFT JOIN rooms AS r ON r.id = cl.roomid"
+      db_select = "cl.id, cl.user_id, cl.room_id, cl.name, cl.text, cl.created, r.id AS room_id, r.name AS room_name, r.shortcut AS room_shortcut"
+      db_from = "chat_log AS cl LEFT JOIN rooms AS r ON r.id = cl.room_id"
       db_where = ['text']
    elif what == 'room':
       db_select = "*"
@@ -1727,12 +1722,17 @@ def search(req):
       return render_to_response('search.html', {'results':[], 'what':what, 'search':search}, context_instance=RequestContext(req))
 
    # Generate sql where statement
-   params = []
-   db_where_gen = ''
-   for w in db_where:
+   if what == 'chat':
+      params = []
       params.append(db_search)
-      db_where_gen += "LOWER(%s) LIKE %%s OR " % w
-   db_where_gen = db_where_gen[:-4]
+      db_where_gen = "text_tsv @@ to_tsquery(%s)"
+   else:
+      params = []
+      db_where_gen = ''
+      for w in db_where:
+         params.append(db_search)
+         db_where_gen += "LOWER(%s) LIKE %%s OR " % w
+      db_where_gen = db_where_gen[:-4]
 
    # Our full querie
    rq = "SELECT "+db_select+" FROM "+db_from+" WHERE "+db_where_gen
@@ -1743,10 +1743,11 @@ def search(req):
 
    if req.is_ajax():
       last = int(req.GET.get('last', 0))
-      rq += ' LIMIT %s, 30' % last
+      rq += ' LIMIT 30 OFFSET %s' % last
    else:
-      rq += ' LIMIT 0, 30'
+      rq += ' LIMIT 30 OFFSET 0'
 
+   print rq
    cursor.execute(rq, params)
    results = dict_cursor(cursor)
 

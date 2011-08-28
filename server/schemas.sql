@@ -52,7 +52,6 @@ CREATE TABLE rooms (
    downvotes               int DEFAULT 0 NOT NULL,
    current_song            bigint NULL,
    current_song_name       character varying(255) NULL,
-   song_starttime          timestamp with time zone NULL,
    current_dj              bigint NULL,
    current_dj_name         character varying(255),
 
@@ -100,20 +99,21 @@ CREATE INDEX chat_log_created_idx ON chat_log (created);
 CREATE TABLE song_log (
    room_id           bigint NOT NULL,
    song_id           bigint NOT NULL,
+   created           timestamp with time zone DEFAULT current_timestamp NOT NULL,
    song_name         character varying(255),
    song_artist       character varying(255),
    song_album        character varying(255),
-   starttime         timestamp with time zone NOT NULL,
+   song_coverart     character varying(255),
+   song_length       int DEFAULT 0 NOT NULL,
    upvotes           int DEFAULT 0 NOT NULL,
    downvotes         int DEFAULT 0 NOT NULL,
    dj                bigint NOT NULL,
    dj_name           character varying(255),
    dj_count          int DEFAULT 0 NOT NULL,
    listeners         int DEFAULT 0 NOT NULL,
-   created           timestamp with time zone DEFAULT current_timestamp NOT NULL,
 
    CONSTRAINT        song_log_pk
-                        PRIMARY KEY (room_id, song_id, starttime),
+                        PRIMARY KEY (room_id, song_id, created),
 
    CONSTRAINT        song_log_room_id_fk
                         FOREIGN KEY (room_id)
@@ -127,6 +127,8 @@ CREATE TABLE song_log (
                         FOREIGN KEY (dj)
                         REFERENCES users(id) ON DELETE CASCADE
 );
+CREATE INDEX song_log_upvotes   ON song_log (upvotes);
+CREATE INDEX song_log_downvotes ON song_log (downvotes);
 
 
 CREATE TABLE users_songs_liked (

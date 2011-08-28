@@ -104,43 +104,45 @@ var DatabaseOperations = {
    'songlog.create': function () {
       var self = this;
 
-      if (arguments.length !== 13) { throw new Error('songlog.create - Bad arguments length'); }
-      if (typeof arguments[12] !== 'function') { throw new Error('songlog.create - Arguments invalid'); }
+      if (arguments.length !== 14) { throw new Error('songlog.create - Bad arguments length'); }
+      if (typeof arguments[13] !== 'function') { throw new Error('songlog.create - Arguments invalid'); }
 
-      var roomId     = arguments[0]
-        , songId     = arguments[1]
-        , songName   = arguments[2]
-        , songArtist = arguments[3]
-        , songAlbum  = arguments[4]
-        , starttime  = arguments[5]
-        , upvotes    = arguments[6]
-        , downvotes  = arguments[7]
-        , djId       = arguments[8]
-        , djName     = arguments[9]
-        , djCount    = arguments[10]
-        , listeners  = arguments[11]
-        , callback   = arguments[12];
+      var roomId       = arguments[0]
+        , songId       = arguments[1]
+        , songName     = arguments[2]
+        , songArtist   = arguments[3]
+        , songAlbum    = arguments[4]
+        , songCoverart = arguments[5]
+        , songLength   = arguments[6]
+        , upvotes      = arguments[7]
+        , downvotes    = arguments[8]
+        , djId         = arguments[9]
+        , djName       = arguments[10]
+        , djCount      = arguments[11]
+        , listeners    = arguments[12]
+        , callback     = arguments[13];
 
-      if (typeof roomId     !== 'number') { var errno = 1; }
-      if (typeof songId     !== 'number') { var errno = 2; }
-      if (typeof songName   !== 'string') { var errno = 3; }
-      if (typeof songArtist !== 'string') { var errno = 4; }
-      if (typeof songAlbum  !== 'string') { var errno = 5; }
-      if (typeof starttime  !== 'string' && typeof starttime !== 'object') { var errno = 6; }
-      if (typeof upvotes    !== 'number') { var errno = 7; }
-      if (typeof downvotes  !== 'number') { var errno = 8; }
-      if (typeof djId       !== 'number') { var errno = 9; }
-      if (typeof djName     !== 'string') { var errno = 10; }
-      if (typeof djCount    !== 'number') { var errno = 11; }
-      if (typeof listeners  !== 'number') { var errno = 12; }
+      if (typeof roomId       !== 'number') { var errno = 1; }
+      if (typeof songId       !== 'number') { var errno = 2; }
+      if (typeof songName     !== 'string') { var errno = 3; }
+      if (typeof songArtist   !== 'string') { var errno = 4; }
+      if (typeof songAlbum    !== 'string') { var errno = 5; }
+      if (typeof songCoverart !== 'string' && songCoverart !== null) { var errno = 6; }
+      if (typeof songLength   !== 'number') { var errno = 7; }
+      if (typeof upvotes      !== 'number') { var errno = 8; }
+      if (typeof downvotes    !== 'number') { var errno = 9; }
+      if (typeof djId         !== 'number') { var errno = 10; }
+      if (typeof djName       !== 'string') { var errno = 11; }
+      if (typeof djCount      !== 'number') { var errno = 12; }
+      if (typeof listeners    !== 'number') { var errno = 13; }
       if (errno) {
          return callback('songlog.create - Arguments invalid '+errno, null);
       }
 
-      var query  = 'INSERT INTO song_log (room_id, song_id, song_name, song_artist, song_album, ' +
-                   '    starttime, upvotes, downvotes, dj, dj_name, dj_count, listeners)        ' +
-                   'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *      ';
-      var params = [ roomId, songId, songName, songArtist, songAlbum, starttime, upvotes,
+      var query  = 'INSERT INTO song_log (room_id, song_id, song_name, song_artist, song_album, song_coverart, song_length, ' +
+                   '    upvotes, downvotes, dj, dj_name, dj_count, listeners)        ' +
+                   'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *      ';
+      var params = [ roomId, songId, songName, songArtist, songAlbum, songCoverart, songLength, upvotes,
                      downvotes, djId, djName, djCount, listeners ];
       self.db.query(query, params, function(err, res) {
          if (!err) {
@@ -198,8 +200,8 @@ var DatabaseOperations = {
    'room.createUpdate': function () {
       var self = this;
 
-      if (arguments.length !== 14) { throw new Error('user.createUpdate - Bad arguments length'); }
-      if (typeof arguments[13] !== 'function') { throw new Error('user.createUpdate - Arguments invalid'); }
+      if (arguments.length !== 13) { throw new Error('user.createUpdate - Bad arguments length'); }
+      if (typeof arguments[12] !== 'function') { throw new Error('user.createUpdate - Arguments invalid'); }
 
       var roomid               = arguments[0]
         , name                 = arguments[1]
@@ -213,8 +215,7 @@ var DatabaseOperations = {
         , downvotes            = arguments[9]
         , currentSongId        = arguments[10]
         , currentSongName      = arguments[11]
-        , currentSongStarttime = arguments[12]
-        , callback             = arguments[13];
+        , callback             = arguments[12];
 
       if (typeof roomid               !== 'string')                                      { var errno = 1; }
       if (typeof name                 !== 'string')                                      { var errno = 2; }
@@ -228,7 +229,6 @@ var DatabaseOperations = {
       if (typeof downvotes            !== 'number')                                      { var errno = 10; }
       if (typeof currentSongId        !== 'number' && currentSongId        !== null)     { var errno = 11; }
       if (typeof currentSongName      !== 'string' && currentSongName      !== null)     { var errno = 12; }
-      if (typeof currentSongStarttime !== 'object' && typeof currentSongStarttime !== 'string' && currentSongStarttime !== null)     { var errno = 13; }
       if (errno) {
          return callback('room.createUpdate - Arguments invalid ', null);
       }
@@ -240,24 +240,21 @@ var DatabaseOperations = {
          if (res.rowCount == 1) {
             var query  = 'UPDATE rooms SET current_dj=$1, current_dj_name=$2, ' +
                          '    listeners=$3, upvotes=$4, downvotes=$5,         ' +
-                         '    current_song=$6, current_song_name=$7,          ' +
-                         '    song_starttime=$8                               ' +
-                         'WHERE id=$9 RETURNING *';
+                         '    current_song=$6, current_song_name=$7           ' +
+                         'WHERE id=$8 RETURNING *';
             var params = [ currentDjId, currentDjName, listeners, upvotes, downvotes,
-                           currentSongId, currentSongName, currentSongStarttime,
-                           res.rows[0].id ];
+                           currentSongId, currentSongName, res.rows[0].id ];
             self.db.query(query, params, function (err, res) {
                callback(null, res.rows[0]);
             });
          } else {
-            var query  = 'INSERT INTO rooms (roomid, name, created, description,   ' +
-                         '    shortcut, current_dj, current_dj_name, listeners,    ' +
-                         '    upvotes, downvotes, current_song, current_song_name, ' +
-                         '    song_starttime)                                      ' +
-                         'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *';
-            var params = [roomid, name, created, description, shortcut,
-                          currentDjId, currentDjName, listeners, upvotes,
-                          downvotes, currentSongId, currentSongName, currentSongStarttime];
+            var query  = 'INSERT INTO rooms (roomid, name, created, description,    ' +
+                         '    shortcut, current_dj, current_dj_name, listeners,     ' +
+                         '    upvotes, downvotes, current_song, current_song_name) ' +
+                         'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *';
+            var params = [ roomid, name, created, description, shortcut,
+                           currentDjId, currentDjName, listeners, upvotes,
+                           downvotes, currentSongId, currentSongName ];
             self.db.query(query, params, function (err, res) {
                callback(null, res.rows[0]);
             });
@@ -298,9 +295,9 @@ var DatabaseOperations = {
       var query = 'UPDATE rooms SET '+update+' WHERE '+key.name+'=$'+i+' RETURNING *';
       values.push( key.value );
 
-      self.db.query(query, values, function (err, res) {
+      self.db.query(query, values, function (err, res) { if (!err) {
          callback(null, true);
-      })
+      } else { callback(err, null); } })
    },
 
 
@@ -387,7 +384,7 @@ var DatabaseOperations = {
          if (res.rowCount == 1) {
             callback(null, res.rows[0]);
          } else {
-            callback(null, null);
+            callback('song.get - Song does not exists', null);
          }
       });
    },
