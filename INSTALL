@@ -1,5 +1,9 @@
 apt-get install apache2
+apt-get install libapache2-mod-wsgi
 apt-get install postgresql
+apt-get install libssl-dev
+apt-get install g++
+apt-get install libpq-dev
 
 --- Install memcached ---
 curl -O http://memcached.googlecode.com/files/memcached-1.4.5.tar.gz

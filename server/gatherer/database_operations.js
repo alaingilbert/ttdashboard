@@ -255,9 +255,9 @@ var DatabaseOperations = {
             var params = [ roomid, name, created, description, shortcut,
                            currentDjId, currentDjName, listeners, upvotes,
                            downvotes, currentSongId, currentSongName ];
-            self.db.query(query, params, function (err, res) {
+            self.db.query(query, params, function (err, res) { if (!err) {
                callback(null, res.rows[0]);
-            });
+            } else { callback(err, null); } });
          }
       });
    },
