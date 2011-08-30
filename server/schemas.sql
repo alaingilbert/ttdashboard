@@ -152,15 +152,3 @@ CREATE TABLE users_songs_liked (
 );
 CREATE INDEX users_songs_liked_nb_awesomes_idx ON users_songs_liked (nb_awesomes);
 CREATE INDEX users_songs_liked_nb_lames_idx    ON users_songs_liked (nb_lames);
-
-
---- 
-
-CREATE TABLE data_providers (
-   id                      bigserial NOT NULL,
-   key                     character varying(40) UNIQUE,
-   email                   character varying(50) UNIQUE,
-   password                character varying(40),
-   activated               boolean DEFAULT False,
-   bandwidth               bigint DEFAULT 0 NOT NULL
-);
