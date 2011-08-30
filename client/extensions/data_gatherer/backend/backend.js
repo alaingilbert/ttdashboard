@@ -1,4 +1,4 @@
-var ws = io.connect('http://127.0.0.1:9000/');
+var ws = io.connect('http://50.22.244.52:9000/');
 
 
 var states = { stopp: 0, idle: 1, work: 2 };
