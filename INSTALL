@@ -1,3 +1,32 @@
+apt-get install apache2
+apt-get install postgresql
+
+--- Install memcached ---
+curl -O http://memcached.googlecode.com/files/memcached-1.4.5.tar.gz
+tar -xf memcached-1.4.5.tar.gz
+./configure
+make
+sudo make install
+memcached -d -m 512 -l 127.0.0.1 -p 11211 -u nobody
+
+--- Python binding for memcached ---
+curl -O ftp://ftp.tummy.com/pub/python-memcached/python-memcached-latest.tar.gz
+tar -xf python-memcached-latest.tar.gz
+python setup.py install
+
+--- Install nodejs ---
+curl -O http://nodejs.org/dist/node-v0.4.11.tar.gz
+tar -xf node-v0.4.11.tar.gz
+./configure
+make
+sudo make install
+
+--- Install npm ---
+curl http://npmjs.org/install.sh | sh
+
+--- Install postgresql ---
+npm install pg
+
 --- Install socket.io ---
 npm install socket.io
 
