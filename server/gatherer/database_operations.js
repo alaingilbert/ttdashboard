@@ -44,7 +44,7 @@ var DatabaseOperations = {
       var params = [userid];
 
       self.db.query(query, params, function (err, res) {
-         if (res.rowCount == 1) {
+         if (res.rows.length == 1) {
             var query  = 'UPDATE users SET name=$1, laptop=$2, acl=$3, fans=$4, points=$5, avatarid=$6 ' +
                          'WHERE id=$7 RETURNING *';
             var params = [name, laptop, acl, fans, points, avatarid, res.rows[0].id];
@@ -89,7 +89,7 @@ var DatabaseOperations = {
 
       self.db.query(query, params, function (err, res) {
          if (!err) {
-            if (res.rowCount == 1) {
+            if (res.rows.length == 1) {
                callback(null, res.rows[0]);
             } else {
                callback('user.get - User does not exists', null);
@@ -237,7 +237,7 @@ var DatabaseOperations = {
       var params = [roomid];
 
       self.db.query(query, params, function (err, res) {
-         if (res.rowCount == 1) {
+         if (res.rows.length == 1) {
             var query  = 'UPDATE rooms SET current_dj=$1, current_dj_name=$2, ' +
                          '    listeners=$3, upvotes=$4, downvotes=$5,         ' +
                          '    current_song=$6, current_song_name=$7           ' +
@@ -340,7 +340,7 @@ var DatabaseOperations = {
       var params = [ songid ];
 
       self.db.query(query, params, function (err, res) {
-         if (res.rowCount == 1) {
+         if (res.rows.length == 1) {
             callback(null, res.rows[0]);
          } else {
             var query  = 'INSERT INTO songs (songid, album, artist, song, coverart, ' +
@@ -381,7 +381,7 @@ var DatabaseOperations = {
       }
 
       self.db.query(query, params, function (err, res) {
-         if (res.rowCount == 1) {
+         if (res.rows.length == 1) {
             callback(null, res.rows[0]);
          } else {
             callback('song.get - Song does not exists', null);
@@ -450,7 +450,7 @@ var DatabaseOperations = {
       var query  = 'SELECT * FROM users_songs_liked WHERE user_id=$1 AND song_id=$2 LIMIT 1';
       var params = [ userId, songId ];
       self.db.query(query, params, function (err, res) {
-         if (res.rowCount == 1) {
+         if (res.rows.length == 1) {
             if (appreciate == 'up') {
                var query  = 'UPDATE users_songs_liked SET nb_awesomes=nb_awesomes+1 WHERE user_id=$1 AND song_id=$2 RETURNING *';
                var params = [ userId, songId ];
