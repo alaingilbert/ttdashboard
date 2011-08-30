@@ -1,14 +1,15 @@
 var settings = {
-   DEBUG:          true,
-   SALT:           'da9d3D#d8djd*df7fsf&dfsofj@diwq$diae32uewqoekqw9k3%da',
+   DEBUG:            true,
+   SALT:             'a9d3j7fsf&dfsof@diqda2uewqoekqwa',
 
    // Mongo settings
-   MYSQL_USER:     '',
-   MYSQL_PASW:     '',
+   POSTGRES_USER:    'postgres',
+   POSTGRES_PASW:    '',
+   POSTGRES_DB:      '',
 
    // Memcached settings
-   MEMCACHED_HOST: '127.0.0.1',
-   MEMCACHED_PORT: 11211
+   MEMCACHED_HOST:   '127.0.0.1',
+   MEMCACHED_PORT:   11211
 }
 
 
