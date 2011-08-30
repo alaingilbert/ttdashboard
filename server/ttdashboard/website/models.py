@@ -15,6 +15,9 @@ class UserProfile(models.Model):
    activation_key = models.CharField(max_length=40, null=True, blank=True)
    auth_key       = models.TextField(max_length=255, null=True, blank=True)
 
+   api_key        = models.CharField(max_length=40, null=True, blank=True)
+   bandwidth      = models.BigIntegerField(default=0)
+
    def user_email(self):
       return self.user.email
 

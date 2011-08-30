@@ -697,11 +697,13 @@ def user_register(req):
 
 
          key = hashlib.sha1(str(datetime.now())).hexdigest()
+         api_key = hashlib.sha1(str(datetime.now()) + str(random.randint(0, 100000))).hexdigest()
          user = User.objects.create_user(username, email, password)
          user.is_active = False
          user.save()
          profile = user.get_profile()
          profile.activation_key = key
+         profile.api_key = api_key
          profile.save()
 
          send_mail('ttDashboard confirmation', 'http://ttdashboard.com/activate/%s/' % key, 'no-reply@ttdashboard.com', [email], fail_silently=False)
@@ -786,6 +788,12 @@ def top_songs(req):
    cursor.execute("SELECT * FROM songs ORDER BY nb_play DESC LIMIT 12")
    pop_songs = dict_cursor(cursor)
    return pop_songs
+
+
+def v2_0(req):
+   pass
+   ctx = {}
+   return render_to_response('v2_0.html', ctx, context_instance=RequestContext(req))
 
 
 def home(req):
@@ -998,6 +1006,7 @@ def song(req, song_id):
    cursor.execute("SELECT sl.upvotes AS upvotes, \
                      sl.downvotes AS downvotes, \
                      sl.dj AS current_dj_id, \
+                     sl.created, \
                      u.name AS current_dj, \
                      r.name AS room_name, \
                      r.roomid AS roomid, \
@@ -1747,7 +1756,6 @@ def search(req):
    else:
       rq += ' LIMIT 30 OFFSET 0'
 
-   print rq
    cursor.execute(rq, params)
    results = dict_cursor(cursor)
 

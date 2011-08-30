@@ -63,7 +63,7 @@
    <div id="appreciations">
    {% for log in appreciation_log %}
       <div class="appreciation">
-         <label>Date:</label><span>{{log.starttime}}</span><br />
+         <label>Date:</label><span>{{log.created}}</span><br />
          <label>Room:</label><span><a href="/room/{% if log.room_shortcut %}{{log.room_shortcut}}{% else %}{{log.roomid}}{% endif %}/">{{log.room_name}}</a></span><br />
          {% if log.current_dj %}
          <label>DJ:</label><span><a href="/user/{{log.current_dj_id}}/">{{log.current_dj}}</a></span><br />

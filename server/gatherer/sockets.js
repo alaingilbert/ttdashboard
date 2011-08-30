@@ -1,5 +1,71 @@
 require('./utils');
 
+
+var SocketsManager = {
+   sockets:  {},
+   rooms:    {},
+   interval: null,
+
+   startInterval: function () {
+      var self = this;
+      self.interval = setInterval(function () {
+         for (var roomid in self.rooms) {
+            if (self.rooms[roomid].length > 1) {
+               self.rotate(roomid);
+            }
+         }
+      }, 1000*60*10);
+   },
+
+   add: function (socket, callback) {
+      var self = this;
+      
+      if (!self.interval) {
+         self.startInterval();
+      }
+
+      socket.get('room', function (err, room) {
+         var roomid = room.roomid;
+
+         var infos = self.sockets[socket];
+         if (infos) {
+            self.rooms[infos.roomid].splice(infos.idx, 1);
+         }
+
+         if (!self.rooms[roomid]) {
+            self.rooms[roomid] = [];
+            socket.emit('startt', { });
+         }
+         self.rooms[roomid].push(socket);
+         self.sockets[socket] = { roomid: roomid, idx: self.rooms.length - 1 };
+         callback();
+      });
+   },
+
+   remove: function (socket, callback) {
+      var self = this;
+      var infos = self.sockets[socket];
+      if (infos) {
+         self.rooms[infos.roomid].splice(infos.idx, 1);
+         delete self.sockets[socket];
+         socket.emit('stopp', { });
+
+         var sck = self.rooms[infos.roomid][0];
+         sck.emit('startt', { });
+      }
+      callback();
+   },
+
+   rotate: function (roomid) {
+      var sck = self.rooms[roomid].splice(0, 1);
+      sck.emit('stopp', { });
+      self.rooms[roomid].push(sck);
+      var sck = self.rooms[roomid][0];
+      sck.emit('startt', { });
+   }
+};
+
+
 var sockets = {
    db: null,
    setDb: function (db) { this.db = db; },
@@ -17,6 +83,7 @@ var sockets = {
 
 
       socket.set('isAuth', false);
+      socket.set('bytes', 0);
 
 
       /**
@@ -49,8 +116,21 @@ var sockets = {
          if (typeof callback !== 'function')    { socket.disconnect(); return false; }
          if (!data || typeof data !== 'object') { socket.disconnect(); return callback('Invalid data', null); }
 
+         socket.get('bytes', function (err, bytes) {
+            bytes += JSON.stringify(data).length;
+            socket.set('bytes', bytes);
+         });
+
          socket.get('isAuth', function (err, isAuth) { if (isAuth) {
             var command = data.$get('command');
+            var err     = data.$get('err');
+            
+            if (err) {
+               if (err == 'Room full') {
+                  return self.processRoomFull(socket, data, callback);
+               }
+            }
+
             if (command) {
                switch (command) {
                   case 'registered':
@@ -109,7 +189,20 @@ var sockets = {
 
 
       socket.on('disconnect', function () {
+         SocketsManager.remove(socket, function () {
+            socket.get('bytes', function (err, bytes) {
+               console.log('TOTAL: ', bytes);
+            });
+         });
       });
+   },
+
+
+   /**
+    *
+    */
+   processRoomFull: function (socket, data, callback) {
+      SocketsManager.remove(socket, callback);
    },
 
 
@@ -431,7 +524,9 @@ var sockets = {
                                                               , djId:         currentDjId
                                                               , djName:       currentDjName
                                                               }, function (err, res) { if (!err) {
-                                       callback(null, true);
+                                       SocketsManager.add(socket, function () {
+                                          callback(null, true);
+                                       });
                                     } else { return callback(err, null); } });
                                  });
                               });
@@ -449,7 +544,9 @@ var sockets = {
                                                      , djId:         null
                                                      , djName:       null
                                                      }, function () {
-                              callback('SHOULD NEVER PASS HERE', null);
+                              SocketsManager.add(socket, function () {
+                                 callback('SHOULD NEVER PASS HERE', null);
+                              });
                            });
                         }
                      });
@@ -466,7 +563,7 @@ var sockets = {
     */
    processRooms: function (socket, data, callback) {
       socket.set('room', null, function () {
-         callback(null, 'stop');
+         callback(null, 'stopp');
       });
    }
 };

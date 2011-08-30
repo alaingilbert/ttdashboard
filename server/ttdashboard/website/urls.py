@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('website.views',
    url(r'^$', 'home', name='home'),
+   url(r'^v2.0/$', 'v2_0'),
    url(r'^terms/$', 'terms'),
    url(r'^hackaround/$', 'hackaround'),
    url(r'^bookmarklet/$', 'bookmarklet'),
