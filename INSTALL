@@ -36,3 +36,7 @@ npm install socket.io
 
 --- Install nodeunit ---
 npm install nodeunit
+
+--- Settings files ---
+cp settings.py.default settings.py
+cp settings.js.default settings.js
