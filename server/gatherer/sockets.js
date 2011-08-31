@@ -51,7 +51,9 @@ var SocketsManager = {
          socket.emit('stopp', { });
 
          var sck = self.rooms[infos.roomid][0];
-         sck.emit('startt', { });
+         if (sck) {
+            sck.emit('startt', { });
+         }
       }
       callback();
    },
