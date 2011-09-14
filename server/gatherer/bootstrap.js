@@ -22,7 +22,7 @@ Process.db = db;
 //sockets.listen(9000);
 
 function callback(err, res) {
-   console.log(err, res);
+   if (err) { console.log(err); }
 }
 
 // Create all bots
