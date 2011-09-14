@@ -36,3 +36,6 @@ npm install socket.io
 
 --- Install nodeunit ---
 npm install nodeunit
+
+--- Install websocket client ---
+npm install websocket-client

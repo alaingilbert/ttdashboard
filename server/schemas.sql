@@ -152,3 +152,35 @@ CREATE TABLE users_songs_liked (
 );
 CREATE INDEX users_songs_liked_nb_awesomes_idx ON users_songs_liked (nb_awesomes);
 CREATE INDEX users_songs_liked_nb_lames_idx    ON users_songs_liked (nb_lames);
+
+
+CREATE TABLE bots (
+   userid                  character varying(50) UNIQUE,
+   auth                    character varying(255) UNIQUE,
+   roomid                  character varying(50)
+);
+
+
+CREATE TABLE playlists_songs (
+   song_id                 bigint NOT NULL,
+   playlist_id             bigint NOT NULL,
+   created                 timestamp with time zone DEFAULT current_timestamp,
+   comment                 character varying(255),
+
+   CONSTRAINT              playlists_songs_pk PRIMARY KEY (song_id, playlist_id)
+);
+
+
+CREATE TABLE playlists (
+   id                      bigserial NOT NULL,
+   uid                     bigint NOT NULL,
+   created                 timestamp with time zone DEFAULT current_timestamp,
+   name                    character varying(255),
+   comment                 character varying(255),
+
+   CONSTRAINT              playlists_pk PRIMARY KEY (id),
+
+   CONSTRAINT              playlists_uid_fk
+                              FOREIGN KEY (uid)
+                              REFERENCES auth_user(id)
+);

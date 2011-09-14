@@ -282,7 +282,6 @@ def playlists_add_song(req, song_id):
              (song_id, playlist_id, created, comment) \
              VALUES \
              %s \
-             ON DUPLICATE KEY UPDATE song_id=VALUES(song_id) \
              " % insert
       cursor.execute(sql)
       transaction.commit_unless_managed()
@@ -305,7 +304,7 @@ def playlists_add_song(req, song_id):
                    LEFT JOIN playlists_songs AS ps \
                      ON ps.playlist_id = p.id AND ps.song_id = %s \
                    WHERE p.uid = %s \
-                   GROUP BY p.id \
+                   GROUP BY p.id, p.uid, p.created, p.comment, p.name, ps.song_id, ps.playlist_id, ps.created, ps.comment \
                   ", [song_id, req.user.id])
 
    if cursor.rowcount <= 0:
@@ -356,7 +355,7 @@ def playlists(req):
                    LEFT JOIN playlists_songs AS ps \
                      ON ps.playlist_id = p.id \
                    WHERE p.uid = %s \
-                   GROUP BY p.id \
+                   GROUP BY p.id, p.name, p.comment \
                   ", [req.user.id])
    playlists = dict_cursor(cursor)
 
@@ -1174,6 +1173,7 @@ def room(req, shortcut):
                      sl.song_id AS song_id, \
                      sl.song_name AS song, \
                      sl.song_artist AS artist, \
+                     sl.created, \
                      sl.upvotes, sl.downvotes, \
                      sl.dj AS current_dj_id, \
                      sl.dj_name AS current_dj \

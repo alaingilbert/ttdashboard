@@ -51,7 +51,9 @@ var SocketsManager = {
          socket.emit('stopp', { });
 
          var sck = self.rooms[infos.roomid][0];
-         sck.emit('startt', { });
+         if (sck) {
+            sck.emit('startt', { });
+         }
       }
       callback();
    },
@@ -102,9 +104,47 @@ var sockets = {
 
          // TODO: Implement the authentification
          // If provider is banned, close the socket.
-         socket.set('isAuth', true, function () {
-            callback(null, true);
-         });
+         self.db['user.auth'](apiKey, function (err, res) { if (!err) {
+            socket.set('isAuth', true, function () {
+               socket.set('uid', res.user_id, function () {
+                  callback(null, true);
+               });
+            });
+         } else { callback(err, res); } })
+      });
+
+
+      /**
+       * Get all the playlists.
+       */
+      socket.on('getPlaylists', function (data, callback) {
+         if (typeof callback !== 'function')    { socket.disconnect(); return false; }
+         if (!data || typeof data !== 'object') { socket.disconnect(); return callback('Invalid data', null); }
+
+         socket.get('isAuth', function (err, isAuth) { if (isAuth) {
+            socket.get('uid', function (err, uid) {
+               self.db['playlist.getAll'](uid, function (err, res) {
+                  callback(err, res);
+               });
+            });
+         } else { callback('Not authenticated', null); } });
+      });
+
+
+      /**
+       * Get a playlist.
+       */
+      socket.on('getPlaylist', function (data, callback) {
+         if (typeof callback !== 'function')    { socket.disconnect(); return false; }
+         if (!data || typeof data !== 'object') { socket.disconnect(); return callback('Invalid data', null); }
+
+         socket.get('isAuth', function (err, isAuth) { if (isAuth) {
+            socket.get('uid', function (err, uid) {
+               self.db['playlist.get'](uid, data.playlistId, function (err, res) {
+                  callback(err, res);
+               });
+            });
+         } else { callback('Not authenticated', null); } });
       });
 
 
@@ -116,12 +156,13 @@ var sockets = {
          if (typeof callback !== 'function')    { socket.disconnect(); return false; }
          if (!data || typeof data !== 'object') { socket.disconnect(); return callback('Invalid data', null); }
 
-         socket.get('bytes', function (err, bytes) {
-            bytes += JSON.stringify(data).length;
-            socket.set('bytes', bytes);
-         });
-
          socket.get('isAuth', function (err, isAuth) { if (isAuth) {
+
+            socket.get('bytes', function (err, bytes) {
+               bytes += JSON.stringify(data).length;
+               socket.set('bytes', bytes);
+            });
+
             var command = data.$get('command');
             var err     = data.$get('err');
             
@@ -357,7 +398,7 @@ var sockets = {
          var userid     = vote[0];
          var appreciate = vote[1];
 
-         self.db['user.get'](userid, function(err, userObj) {
+         self.db['user.get'](userid, function(err, userObj) { if (!err) {
 
          // Create/Update how many time the user has liked
          self.db['userLike.create'](userObj.id, currentSong.id, appreciate, function (err, userLikeObj) {
@@ -366,7 +407,8 @@ var sockets = {
             } else {
                callback(null, true);
             }
-         }); });
+         });
+         } else { callback(err, null); } });
       }
 
       votelogRecurs(votes);

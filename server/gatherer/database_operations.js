@@ -7,6 +7,102 @@ var DatabaseOperations = {
 
 
    /**
+    * Get all playlists.
+    */
+   'playlist.getAll': function () {
+      var self = this;
+
+      if (arguments.length !== 2) { throw new Error('playlist.getAll - Bad arguments length'); }
+      if (typeof arguments[1] !== 'function') { throw new Error('playlist.getAll - Arguments invalid'); }
+
+      var user_id  = arguments[0]
+        , callback = arguments[1];
+
+      if (typeof user_id !== 'number') {
+         return callback('playlist.getAll - Arguments invalid', null);
+      }
+
+      var query  = 'SELECT * FROM playlists WHERE uid=$1';
+      var params = [ user_id ];
+
+      self.db.query(query, params, function (err, res) { if (!err) {
+         callback(null, { playlists: res.rows });
+      } else { callback(err, null); } });
+   },
+
+
+   /**
+    *
+    */
+   'playlist.get': function () {
+      var self = this;
+
+      if (arguments.length !== 3) { throw new Error('playlist.get - Bad arguments length'); }
+      if (typeof arguments[2] !== 'function') { throw new Error('playlist.get - Arguments invalid'); }
+
+      var user_id     = arguments[0]
+        , playlist_id = arguments[1]
+        , callback    = arguments[2];
+
+      if (typeof user_id     !== 'number' ||
+          typeof playlist_id !== 'number') {
+         return callback('playlist.get - Arguments invalid', null);
+      }
+
+      var query  = 'SELECT * FROM playlists WHERE uid=$1 LIMIT 1';
+      var params = [ user_id ];
+
+      self.db.query(query, params, function (err, res) { if (!err) {
+         if (res.rows.length == 1) {
+            var query  = 'SELECT * FROM playlists_songs AS ps ' +
+                         'LEFT JOIN songs AS s                ' +
+                         '    ON s.id = ps.song_id            ' +
+                         'WHERE ps.playlist_id = $1           ';
+            var params = [ playlist_id ];
+
+            self.db.query(query, params, function (err, res) { if (!err) {
+               callback(null, { songs: res.rows });
+            } else { callback(err, null); } });
+         } else {
+            callback('playlist.get - Invalid playlist id', null);
+         }
+      } else { callback(err, null); } });
+   },
+
+
+   /**
+    *
+    */
+   'user.auth': function () {
+      var self = this;
+
+      if (arguments.length !== 2) { throw new Error('user.auth - Bad arguments length'); }
+      if (typeof arguments[1] !== 'function') { throw new Error('user.auth - Arguments invalid'); }
+
+      var apiKey   = arguments[0]
+        , callback = arguments[1];
+
+      if (typeof apiKey !== 'string') {
+         return callback('user.auth - Arguments invalid', null);
+      }
+
+      var query = 'SELECT user_id FROM auth_user AS u        ' +
+                  'LEFT JOIN website_userprofile AS up ' +
+                  'ON up.user_id = u.id                ' +
+                  'WHERE up.api_key = $1               ';
+      var params = [apiKey];
+
+      self.db.query(query, params, function (err, res) { if (!err) {
+         if (res.rows.length == 1) {
+            callback(null, res.rows[0]);
+         } else {
+            callback('user.auth - Unable to authenticate', null);
+         }
+      } else { callback(err, null); } });
+   },
+
+
+   /**
     * Create/update a user.
     * @sig userid:string, name:string, created:date, laptop:string, acl:int, fans:int, points:int, avatarid:int, callback:fn -> User:obj
     */

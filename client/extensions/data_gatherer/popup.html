@@ -1,0 +1,45 @@
+<html>
+<head>
+   <link rel="stylesheet" media="screen" type="text/css" href="reset.css" />
+   <link rel="stylesheet" media="screen" type="text/css" href="popup.css" />
+   <script type="text/javascript" src="right.js"></script>
+   <script type="text/javascript" src="popup.js"></script>
+   <script type="text/javascript" src="middle.js"></script>
+   <script type="text/javascript" src="frame.js"></script>
+   <script type="text/javascript" src="homefrm.js"></script>
+   <script type="text/javascript" src="playlistsfrm.js"></script>
+   <script type="text/javascript" src="playlistfrm.js"></script>
+   <script type="text/javascript" src="prevbtn.js"></script>
+   <script type="text/javascript" src="playlist.js"></script>
+   <script type="text/javascript" src="song.js"></script>
+   <script type="text/javascript">
+   $(document).onReady(function () {
+      new Popup();
+      /*
+      $('prevBtn').on('click', function () {
+         var left = $('frames').getStyle('left').replace('px', '');
+         var nb = Math.abs(left / 250);
+         if (nb > 0) {
+            $('frames').morph({ left: ((nb-1) * -250)+'px' });
+         }
+      });
+
+      function playlistClick() {
+      }
+
+      $('playlistsBtn').on('click', function () {
+         chrome.extension.sendRequest({ action: 'getPlaylists' }, function (data) {
+            $('playlists').first('ul').clean();
+            for (var i=0; i<data.playlists.length; i++) {
+               var playlist = new Playlist(data.playlists[i]);
+               $('playlists').first('ul').insert(playlist);
+            }
+            $('frames').morph({ left: -250+'px' });
+         });
+      });
+      */
+   });
+   </script>
+</head>
+<body></body>
+</html>
