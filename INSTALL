@@ -37,5 +37,6 @@ npm install socket.io
 --- Install nodeunit ---
 npm install nodeunit
 
---- Install websocket client ---
-npm install websocket-client
+--- Settings files ---
+cp settings.py.default settings.py
+cp settings.js.default settings.js

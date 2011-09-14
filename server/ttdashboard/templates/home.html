@@ -195,7 +195,6 @@
       <div class="room {% cycle "cycle1" "cycle2" %}">
          <span class="name"><a href="/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/">{{room.room_name}}</a></span>
          <span class="listeners">({{room.room_listeners}} listeners)</span>
-         <div class="more"><a href="/room/{% if room.room_shortcut %}{{room.room_shortcut}}{% else %}{{room.roomid}}{% endif %}/">More infos...</a></div>
          <div class="song">
             <div class="currently_playing">Currently playing {% if room.current_dj %}<span class="dj">(DJ: <a href="/user/{{room.current_dj_id}}/">{{room.current_dj}}</a>)</span>{% endif %}</div>
             <div class="avatar">

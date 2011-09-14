@@ -152,8 +152,6 @@ div.column div.room span.name a:hover {
 }
 div.column div.room span.listeners {
    color: gray;
-}
-div.column div.room div.more {
    float: right;
    font-size: 12px;
 }
