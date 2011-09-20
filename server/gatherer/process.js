@@ -364,6 +364,7 @@ var Process = {
                                                , djId:         currentDjId
                                                , djName:       currentDjName
                                                };
+                                 callback(null, true);
                               });
                            });
                         } else { callback(err, null); } });
@@ -380,6 +381,7 @@ var Process = {
                                       , djId:         null
                                       , djName:       null
                                       };
+                        callback(null, true);
                      }
                   }
                }
