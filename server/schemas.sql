@@ -3,13 +3,16 @@
 CREATE TABLE users (
    id                      bigserial NOT NULL,
    userid                  character varying(40) UNIQUE NOT NULL,
+   fbid                    character varying(50) UNIQUE NULL,
    name                    character varying(255) NOT NULL,
-   created                 timestamp with time zone NOT NULL,
+   created                 timestamp with time zone NULL,
    laptop                  character varying(20) NOT NULL,
    acl                     int DEFAULT 0 NOT NULL,
    fans                    int DEFAULT 0 NOT NULL,
    points                  int DEFAULT 0 NOT NULL,
    avatarid                int DEFAULT 0 NOT NULL,
+   hugs                    int DEFAULT 0 NOT NULL,
+   hearts                  int DEFAULT 0 NOT NULL,
 
    CONSTRAINT              users_pk PRIMARY KEY (id)
 );
@@ -30,8 +33,9 @@ CREATE TABLE songs (
    genre                   character varying(255),
    filepath                character varying(255),
    bitrate                 int,
-
    nb_play                 int DEFAULT 0 NOT NULL,
+   previewurl              character varying(255) NULL,
+   collectionviewurl       character varying(255) NULL,
 
    CONSTRAINT              songs_pk PRIMARY KEY (id)
 );
@@ -106,13 +110,13 @@ CREATE TABLE song_log (
    song_artist             character varying(255),
    song_album              character varying(255),
    song_coverart           character varying(255),
-   song_length             int DEFAULT 0 NOT NULL,
+   song_length             int DEFAULT 0 NULL,
    upvotes                 int DEFAULT 0 NOT NULL,
    downvotes               int DEFAULT 0 NOT NULL,
-   dj                      bigint NOT NULL,
+   dj                      bigint NULL,
    dj_name                 character varying(255),
-   dj_count                int DEFAULT 0 NOT NULL,
-   listeners               int DEFAULT 0 NOT NULL,
+   dj_count                int DEFAULT 0 NULL,
+   listeners               int DEFAULT 0 NULL,
 
    CONSTRAINT              song_log_pk
                               PRIMARY KEY (room_id, song_id, created),

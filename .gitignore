@@ -6,6 +6,9 @@
 *.crx
 *.mwb
 *.pyc
+settings.py
+settings.js
+ids.py
 server/gatherer/node_modules
 server/gatherer/settings.js
 server/gatherer/doc/

@@ -1,0 +1,9 @@
+PG_DBNAME = 'ttdashboard'
+PG_USER   = ''
+PG_PASSW  = ''
+PG_HOST   = 'localhost'
+
+MY_DBNAME = 'ttbot'
+MY_USER   = ''
+MY_PASSW  = ''
+MY_HOST   = 'localhost'
