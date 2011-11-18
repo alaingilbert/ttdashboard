@@ -442,9 +442,13 @@ var DatabaseOperations = {
             var query  = 'INSERT INTO songs (songid, album, artist, song, coverart, ' +
                          '    length, mnid, genre, filepath, bitrate) ' +
                          'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *';
+            if (album)  { album  = album.substr(0,255);  }
+            if (artist) { artist = artist.substr(0,255); }
+            if (song)   { song   = song.substr(0,255);   }
             var params = [ songid, album, artist, song, coverart, length, mnid, genre,
                            filepath, bitrate ];
             self.db.query(query, params, function (err, res) {
+               console.log(err, res);
                callback(null, res.rows[0]);
             });
          }
